@@ -1,0 +1,262 @@
+// Copyright 2013 bee authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License"): you may
+// not use this file except in compliance with the License. You may obtain
+// a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+// License for the specific language governing permissions and limitations
+// under the License.
+package run
+
+import (
+	"io/ioutil"
+	"os"
+	path "path/filepath"
+	"runtime"
+	"strings"
+
+	"github.com/spf13/cobra"
+
+	cmd2 "egoctl/cmd"
+	"egoctl/cmd/version"
+	"egoctl/config"
+	"egoctl/logger"
+	"egoctl/utils"
+)
+
+var CmdRun = &cobra.Command{
+	Use:   "run [appname] [watchall] [-main=*.go] [-downdoc=true]  [-gendoc=true] [-vendor=true] [-e=folderToExclude] [-ex=extraPackageToWatch] [-tags=goBuildTags] [-runmode=BEEGO_RUNMODE]",
+	Short: "Run the application by starting a local development server",
+	Long: `
+	Run command will supervise the filesystem of the application for any changes, and recompile/restart it.
+	
+	`,
+	Run: RunApp,
+}
+
+// var CmdRun = &commands.Command{
+// 	PreRun: func(cmd *commands.Command, args []string) { version.ShowShortVersionBanner() },
+// }
+
+var (
+	mainFiles []string
+	downdoc   bool
+	gendoc    bool
+	// The flags list of the paths excluded from watching
+	excludedPaths []string
+	// Pass through to -tags arg of "go build"
+	buildTags string
+	// Pass through to -ldflags arg of "go build"
+	buildLDFlags string
+	// Application path
+	currpath string
+	// Application name
+	appname string
+	// Channel to signal an Exit
+	exit chan bool
+	// Flag to watch the vendor folder
+	vendorWatch bool
+	// Current user workspace
+	currentGoPath string
+	// Current runmode
+	runmode string
+	// Extra args to run application
+	runargs string
+	// Extra directories
+	extraPackages []string
+)
+var started = make(chan bool)
+
+func init() {
+	CmdRun.PersistentFlags().StringSliceVarP(&mainFiles, "main", "m", []string{}, "Specify main go files.")
+	CmdRun.PersistentFlags().BoolVarP(&gendoc, "gendoc", "d", false, "Enable auto-generate the docs.")
+	CmdRun.PersistentFlags().BoolVarP(&downdoc, "downdoc", "D", false, "Enable auto-download of the swagger file if it does not exist.")
+	CmdRun.PersistentFlags().StringSliceVarP(&excludedPaths, "exclude", "e", []string{}, "List of paths to exclude.")
+	CmdRun.PersistentFlags().BoolVarP(&vendorWatch, "vendor", "v", false, "Enable watch vendor folder.")
+	CmdRun.PersistentFlags().StringVarP(&buildTags, "tags", "t", "", "Set the build tags. See: https://golang.org/pkg/go/build/")
+	CmdRun.PersistentFlags().StringVarP(&buildLDFlags, "ldflags", "f", "", "Set the build ldflags. See: https://golang.org/pkg/go/build/")
+	CmdRun.PersistentFlags().StringVarP(&runmode, "runmode", "M", "", "Set the Ego run mode.")
+	CmdRun.PersistentFlags().StringVarP(&runargs, "runargs", "", "", "Extra args to run application")
+	CmdRun.PersistentFlags().StringSliceVarP(&extraPackages, "ex", "E", []string{}, "List of extra package to watch.")
+	exit = make(chan bool)
+	cmd2.RootCommand.AddCommand(CmdRun)
+}
+
+// RunApp locates files to watch, and starts the beego application
+func RunApp(cmd *cobra.Command, args []string) {
+	version.ShowShortVersionBanner()
+	// The default app path is the current working directory
+	appPath, _ := os.Getwd()
+
+	// If an argument is presented, we use it as the app path
+	if len(args) != 0 && args[0] != "watchall" {
+		if path.IsAbs(args[0]) {
+			appPath = args[0]
+		} else {
+			appPath = path.Join(appPath, args[0])
+		}
+	}
+
+	if utils.IsInGOPATH(appPath) {
+		if found, _gopath, _path := utils.SearchGOPATHs(appPath); found {
+			appPath = _path
+			appname = path.Base(appPath)
+			currentGoPath = _gopath
+		} else {
+			logger.Log.Fatalf("No application '%s' found in your GOPATH", appPath)
+		}
+		if strings.HasSuffix(appname, ".go") && utils.IsExist(appPath) {
+			logger.Log.Warnf("The appname is in conflict with file's current path. Do you want to build appname as '%s'", appname)
+			logger.Log.Info("Do you want to overwrite it? [yes|no] ")
+			if !utils.AskForConfirmation() {
+				return
+			}
+		}
+	} else {
+		logger.Log.Warn("Running application outside of GOPATH")
+		appname = path.Base(appPath)
+		currentGoPath = appPath
+	}
+
+	logger.Log.Infof("Using '%s' as 'appname'", appname)
+
+	logger.Log.Debugf("Current path: %s", utils.FILE(), utils.LINE(), appPath)
+
+	if runmode == "prod" || runmode == "dev" {
+		os.Setenv("BEEGO_RUNMODE", runmode)
+		logger.Log.Infof("Using '%s' as 'runmode'", os.Getenv("BEEGO_RUNMODE"))
+	} else if runmode != "" {
+		os.Setenv("BEEGO_RUNMODE", runmode)
+		logger.Log.Warnf("Using '%s' as 'runmode'", os.Getenv("BEEGO_RUNMODE"))
+	} else if os.Getenv("BEEGO_RUNMODE") != "" {
+		logger.Log.Warnf("Using '%s' as 'runmode'", os.Getenv("BEEGO_RUNMODE"))
+	}
+
+	var paths []string
+	readAppDirectories(appPath, &paths)
+
+	// Because monitor files has some issues, we watch current directory
+	// and ignore non-go files.
+	for _, p := range config.Conf.DirStruct.Others {
+		paths = append(paths, strings.Replace(p, "$GOPATH", currentGoPath, -1))
+	}
+
+	if len(extraPackages) > 0 {
+		// get the full path
+		for _, packagePath := range extraPackages {
+			if found, _, _fullPath := utils.SearchGOPATHs(packagePath); found {
+				readAppDirectories(_fullPath, &paths)
+			} else {
+				logger.Log.Warnf("No extra package '%s' found in your GOPATH", packagePath)
+			}
+		}
+		// let paths unique
+		strSet := make(map[string]struct{})
+		for _, p := range paths {
+			strSet[p] = struct{}{}
+		}
+		paths = make([]string, len(strSet))
+		index := 0
+		for i := range strSet {
+			paths[index] = i
+			index++
+		}
+	}
+
+	files := []string{}
+	for _, arg := range mainFiles {
+		if len(arg) > 0 {
+			files = append(files, arg)
+		}
+	}
+	if downdoc == true {
+		if _, err := os.Stat(path.Join(appPath, "swagger", "index.html")); err != nil {
+			if os.IsNotExist(err) {
+				downloadFromURL(swaggerlink, "swagger.zip")
+				unzipAndDelete("swagger.zip")
+			}
+		}
+	}
+
+	// Start the Reload server (if enabled)
+	if config.Conf.EnableReload {
+		startReloadServer()
+	}
+	if gendoc == true {
+		NewWatcher(paths, files, true)
+		AutoBuild(files, true)
+	} else {
+		NewWatcher(paths, files, false)
+		AutoBuild(files, false)
+	}
+
+	for {
+		<-exit
+		runtime.Goexit()
+	}
+}
+
+func readAppDirectories(directory string, paths *[]string) {
+	fileInfos, err := ioutil.ReadDir(directory)
+	if err != nil {
+		return
+	}
+
+	useDirectory := false
+	for _, fileInfo := range fileInfos {
+		if strings.HasSuffix(fileInfo.Name(), "docs") {
+			continue
+		}
+		if strings.HasSuffix(fileInfo.Name(), "swagger") {
+			continue
+		}
+
+		if !vendorWatch && strings.HasSuffix(fileInfo.Name(), "vendor") {
+			continue
+		}
+
+		if isExcluded(path.Join(directory, fileInfo.Name())) {
+			continue
+		}
+
+		if fileInfo.IsDir() && fileInfo.Name()[0] != '.' {
+			readAppDirectories(directory+"/"+fileInfo.Name(), paths)
+			continue
+		}
+
+		if useDirectory {
+			continue
+		}
+
+		if path.Ext(fileInfo.Name()) == ".go" || (ifStaticFile(fileInfo.Name()) && config.Conf.EnableReload) {
+			*paths = append(*paths, directory)
+			useDirectory = true
+		}
+	}
+}
+
+// If a file is excluded
+func isExcluded(filePath string) bool {
+	for _, p := range excludedPaths {
+		absP, err := path.Abs(p)
+		if err != nil {
+			logger.Log.Errorf("Cannot get absolute path of '%s'", p)
+			continue
+		}
+		absFilePath, err := path.Abs(filePath)
+		if err != nil {
+			logger.Log.Errorf("Cannot get absolute path of '%s'", filePath)
+			break
+		}
+		if strings.HasPrefix(absFilePath, absP) {
+			logger.Log.Infof("'%s' is not being watched", filePath)
+			return true
+		}
+	}
+	return false
+}
