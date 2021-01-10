@@ -1,0 +1,9 @@
+debug = true
+contextDebug = false
+proType = "default"
+apiPrefix = "/api/admin"
+gitRemotePath = ""
+gitLocalPath = ""
+enableGitPull = true
+enableFormat = true
+gitPull = false

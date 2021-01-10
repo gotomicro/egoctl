@@ -14,7 +14,7 @@ var (
 	objectM                = make(map[string]*SpecType)
 )
 
-func (c *Container) getInlineName(tp interface{}) (string, error) {
+func (c *astParser) getInlineName(tp interface{}) (string, error) {
 	switch v := tp.(type) {
 	case *SpecType:
 		return v.Name, nil
@@ -27,7 +27,7 @@ func (c *Container) getInlineName(tp interface{}) (string, error) {
 	}
 }
 
-func (sp *Container) getInlineTypePrefix(tp interface{}) (string, error) {
+func (sp *astParser) getInlineTypePrefix(tp interface{}) (string, error) {
 	if tp == nil {
 		return "", nil
 	}
@@ -47,7 +47,6 @@ func parseTag(basicLit *ast.BasicLit) string {
 	if basicLit == nil {
 		return ""
 	}
-	fmt.Printf("basicLit.Value--------------->"+"%+v\n", basicLit.Value)
 	return basicLit.Value
 }
 
@@ -55,11 +54,11 @@ func parseTag(basicLit *ast.BasicLit) string {
 // resp1: type can convert to *SpecPointerType|*SpecBasicType|*SpecMapType|*SpecArrayType|*SpecInterfaceType
 // resp2: type's string expression,like int、string、[]int64、map[string]User、*User
 // resp3: error
-func (sp *Container) parseType(expr ast.Expr) (interface{}, string, error) {
+func (sp *astParser) parseType(expr ast.Expr) (interface{}, string, error) {
 	if expr == nil {
 		return nil, "", errors.New("parse error ")
 	}
-	exprStr := sp.Src[expr.Pos():expr.End()]
+	exprStr := sp.readContent[expr.Pos():expr.End()]
 	switch v := expr.(type) {
 	case *ast.StarExpr:
 		star, stringExpr, err := sp.parseType(v.X)
