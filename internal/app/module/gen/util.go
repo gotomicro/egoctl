@@ -127,59 +127,6 @@ func getPackagePath() (packagePath string) {
 	return
 }
 
-func getModelType(orm string) (inputType, goType, mysqlType, tag string) {
-	kv := strings.SplitN(orm, ",", 2)
-	inputType = kv[0]
-	switch inputType {
-	case "string":
-		goType = "string"
-		tag = "size(255)"
-		// todo use orm data
-		mysqlType = "varchar(255) NOT NULL"
-	case "text":
-		goType = "string"
-		tag = "type(longtext)"
-		mysqlType = "longtext  NOT NULL"
-	case "auto":
-		goType = "int"
-		tag = "auto"
-		mysqlType = "int(11) NOT NULL AUTO_INCREMENT"
-	case "pk":
-		goType = "int"
-		tag = "pk"
-		mysqlType = "int(11) NOT NULL"
-	case "datetime":
-		goType = "time.Time"
-		tag = "type(datetime)"
-		mysqlType = "datetime NOT NULL"
-	case "int", "int8", "int16", "int32", "int64":
-		fallthrough
-	case "uint", "uint8", "uint16", "uint32", "uint64":
-		goType = inputType
-		tag = ""
-		mysqlType = "int(11) DEFAULT NULL"
-	case "bool":
-		goType = inputType
-		tag = ""
-		mysqlType = "int(11) DEFAULT NULL"
-	case "float32", "float64":
-		goType = inputType
-		tag = ""
-		mysqlType = "float NOT NULL"
-	case "float":
-		goType = "float64"
-		tag = ""
-		mysqlType = "float NOT NULL"
-	default:
-		logger.Log.Fatalf("not support type: %s", inputType)
-	}
-	// user set orm tag
-	if len(kv) == 2 {
-		tag = kv[1]
-	}
-	return
-}
-
 func FileContentChange(org, new []byte, seg string) bool {
 	if len(org) == 0 {
 		return true

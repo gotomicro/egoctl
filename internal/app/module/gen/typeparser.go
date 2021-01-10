@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"go/ast"
+	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -43,11 +45,81 @@ func (sp *astParser) getInlineTypePrefix(tp interface{}) (string, error) {
 	}
 }
 
-func parseTag(basicLit *ast.BasicLit) string {
+func parseTag(basicLit *ast.BasicLit) SpecTags {
 	if basicLit == nil {
-		return ""
+		return SpecTags{}
 	}
-	return basicLit.Value
+	tags := SpecTags{
+		Origin: reflect.StructTag(basicLit.Value),
+		Value:  parseLineTag(basicLit.Value),
+	}
+	return tags
+}
+
+func (tag StructTag) Lookup() []SpecTag {
+	// When modifying this code, also update the validateStructTag code
+	// in cmd/vet/structtag.go.
+
+	output := make([]SpecTag, 0)
+	for tag != "" {
+		// Skip leading space.
+		i := 0
+		for i < len(tag) && tag[i] == ' ' {
+			i++
+		}
+		tag = tag[i:]
+		if tag == "" {
+			break
+		}
+
+		// Scan to colon. A space, a quote or a control character is a syntax error.
+		// Strictly speaking, control chars include the range [0x7f, 0x9f], not just
+		// [0x00, 0x1f], but in practice, we ignore the multi-byte control characters
+		// as it is simpler to inspect the tag's bytes than the tag's runes.
+		i = 0
+		for i < len(tag) && tag[i] > ' ' && tag[i] != ':' && tag[i] != '"' && tag[i] != 0x7f {
+			i++
+		}
+		if i == 0 || i+1 >= len(tag) || tag[i] != ':' || tag[i+1] != '"' {
+			break
+		}
+		name := string(tag[:i])
+		tag = tag[i+1:]
+
+		// Scan quoted string to find value.
+		i = 1
+		for i < len(tag) && tag[i] != '"' {
+			if tag[i] == '\\' {
+				i++
+			}
+			i++
+		}
+		if i >= len(tag) {
+			break
+		}
+		qvalue := string(tag[:i+1])
+		tag = tag[i+1:]
+
+		value, err := strconv.Unquote(qvalue)
+		if err != nil {
+			break
+		}
+		output = append(output, SpecTag{
+			Name:   name,
+			Origin: value,
+			Value:  strings.Split(value, ";"),
+		})
+	}
+	return output
+}
+
+// 需要trim `gorm:"not null;PRIMARY_KEY;comment:'用户uid'" json:"uid"`
+func parseLineTag(value string) []SpecTag {
+	value = strings.TrimSuffix(value, "`")
+	value = strings.TrimPrefix(value, "`")
+	info := StructTag(value)
+	info.Lookup()
+	return info.Lookup()
 }
 
 // returns

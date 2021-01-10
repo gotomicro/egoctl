@@ -4,7 +4,7 @@ type RenderInfo struct {
 	Module       string
 	ModelName    string
 	Option       UserOption
-	Content      ModelInfos
+	Content      ModelSchemas
 	Descriptor   Descriptor
 	TmplPath     string
 	GenerateTime string

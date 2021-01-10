@@ -63,12 +63,10 @@ func NewRender(m RenderInfo) *RenderFile {
 		logger.Log.Fatalf("Could not get the relative path: %s", err)
 	}
 
-	modelSchemas := m.Content.ToModelSchemas()
-	camelPrimaryKey := modelSchemas.GetPrimaryKey()
+	modelSchemas := m.Content
+
 	importMaps := make(map[string]struct{})
-	if modelSchemas.IsExistTime() {
-		importMaps["time"] = struct{}{}
-	}
+
 	obj.PackageName = filepath.Base(filepath.Dir(relativePath))
 	logger.Log.Infof("Using '%s' as name", obj.ModelName)
 
@@ -89,12 +87,6 @@ func NewRender(m RenderInfo) *RenderFile {
 	obj.SetContext("packageMod", obj.PkgPath)
 
 	obj.SetContext("modelSchemas", modelSchemas)
-
-	for _, value := range modelSchemas {
-		obj.SetContext("field"+utils.CamelString(value.Name)+"Exist", true)
-	}
-
-	obj.SetContext("modelPrimaryKey", camelPrimaryKey)
 
 	for key, value := range pathCtx {
 		obj.SetContext(key, value)
