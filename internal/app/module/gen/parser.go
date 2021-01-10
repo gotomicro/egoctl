@@ -82,10 +82,16 @@ func (a *astParser) parserStruct() error {
 
 func (t *astParser) GetRenderInfos(descriptor Descriptor) (output []RenderInfo) {
 	output = make([]RenderInfo, 0)
+	modelNames := make([]string, 0)
+	for _, content := range t.modelArr {
+		modelNames = append(modelNames, content.Name)
+	}
+
 	// model table name, model table schema
 	for _, content := range t.modelArr {
 		output = append(output, RenderInfo{
 			Module:     descriptor.Module,
+			ModelNames: modelNames,
 			ModelName:  content.Name,
 			Content:    content.ToModelInfos(),
 			Option:     t.userOption,

@@ -20,7 +20,7 @@ type RenderFile struct {
 	Context      pongo2.Context
 	GenerateTime string
 	Option       UserOption
-	ModelName    string
+	ModelName    string // 单个model name
 	PackageName  string
 	FlushFile    string
 	PkgPath      string
@@ -35,7 +35,7 @@ func NewRender(m RenderInfo) *RenderFile {
 	)
 
 	// parse descriptor, get flush file path, beego path, etc...
-	newDescriptor, pathCtx = m.Descriptor.Parse(m.ModelName, m.Option.Path)
+	newDescriptor, pathCtx = m.Descriptor.Parse(m.ModelName, m.ModelNames, m.Option.Path)
 
 	obj := &RenderFile{
 		Context:      make(pongo2.Context),

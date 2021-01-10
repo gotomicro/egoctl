@@ -21,13 +21,15 @@ mkdir -p ~/demo
 
 # 下载egoctl.toml样例配置
 cd ~/demo
-wget https://github.com/gotomicro/egoctl-tmpls/-/raw/master/example/ego.go
-
 go mod init demo
+wget https://github.com/gotomicro/egoctl-tmpls/blob/main/example/egoctl.toml
+wget https://github.com/gotomicro/egoctl-tmpls/blob/main/example/egoctl.go
 egoctl gen code 
 ```
+### 用户配置待补充
 
-### 常见用法
+
+### 模板配置
 #### 1 根据模型设置模板
 用户配置
 ```

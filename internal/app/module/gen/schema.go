@@ -62,7 +62,7 @@ type Descriptor struct {
 	Script  string `toml:"script"`
 }
 
-func (descriptor Descriptor) Parse(modelName string, paths map[string]string) (newDescriptor Descriptor, ctx pongo2.Context) {
+func (descriptor Descriptor) Parse(modelName string, modelNames []string, paths map[string]string) (newDescriptor Descriptor, ctx pongo2.Context) {
 	var (
 		err             error
 		relativeDstPath string
@@ -88,6 +88,7 @@ func (descriptor Descriptor) Parse(modelName string, paths map[string]string) (n
 		ctx["pathRel"+utils.CamelCase(key)] = relPath
 	}
 	ctx["modelName"] = lowerFirst(utils.CamelString(modelName))
+	ctx["modelNames"] = modelNames
 	ctx["modelNameSnake"] = utils.SnakeString(modelName)
 	relativeDstPath, err = render.TemplateFromString(descriptor.DstPath).Execute(ctx)
 	if err != nil {
