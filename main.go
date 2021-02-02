@@ -14,15 +14,16 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
 	"egoctl/cmd"
 	_ "egoctl/cmd/gen"
 	_ "egoctl/cmd/migrate"
 	_ "egoctl/cmd/run"
 	_ "egoctl/cmd/version"
+	_ "egoctl/cmd/web"
 	"egoctl/config"
+	_ "embed"
+	"fmt"
+	"os"
 )
 
 func main() {

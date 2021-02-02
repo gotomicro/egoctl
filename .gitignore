@@ -23,3 +23,4 @@ egoctl-darwin
 egoctl.go
 egoctl.toml
 .egoctl.timestamp
+logs

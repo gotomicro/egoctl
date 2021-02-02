@@ -35,7 +35,7 @@ var DefaultEgoctlPro = &Container{
 		EnableModule:    nil,
 		GitRemotePath:   "",
 		Branch:          "master",
-		GitLocalPath:    system.EgoctlHome + "/egoctl",
+		GitLocalPath:    system.EgoctlHome + "/egoctl/git",
 		EnableFormat:    true,
 		EnableGitPull:   true,
 		Path: map[string]string{
