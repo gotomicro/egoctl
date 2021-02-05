@@ -1,4 +1,4 @@
-package gen
+package parser
 
 import (
 	"errors"

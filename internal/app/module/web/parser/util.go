@@ -1,4 +1,4 @@
-package gen
+package parser
 
 import (
 	"crypto/md5"
@@ -109,9 +109,10 @@ func createPath(filePath string) error {
 	return nil
 }
 
-func getPackagePath() (packagePath string) {
-	f, err := os.Open("go.mod")
+func getPackagePath(projectPath string) (packagePath string) {
+	f, err := os.Open(projectPath + "/go.mod")
 	if err != nil {
+		fmt.Println("getPackagePath", err)
 		return
 	}
 	defer f.Close()

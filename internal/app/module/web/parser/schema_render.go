@@ -1,4 +1,4 @@
-package gen
+package parser
 
 type RenderInfo struct {
 	ModelNames   []string // 所有model names

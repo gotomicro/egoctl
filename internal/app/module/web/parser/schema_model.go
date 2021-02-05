@@ -1,4 +1,4 @@
-package gen
+package parser
 
 // parse get the model info
 type ModelSchema struct {

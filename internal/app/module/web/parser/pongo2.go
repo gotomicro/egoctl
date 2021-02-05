@@ -1,4 +1,4 @@
-package gen
+package parser
 
 import (
 	"egoctl/utils"
@@ -65,7 +65,6 @@ func pongo2ModelFieldsGetPrimaryKey(in *pongo2.Value, param *pongo2.Value) (*pon
 			}
 		}
 	}
-
 	return pongo2.AsSafeValue(primaryKey), nil
 }
 

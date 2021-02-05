@@ -3,6 +3,7 @@ import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
+import MonacoEditorWebpackPlugin from "monaco-editor-webpack-plugin";
 
 const { REACT_APP_ENV } = process.env;
 
@@ -41,4 +42,10 @@ export default defineConfig({
     basePath: '/',
   },
   esbuild: {},
+  chainWebpack(config, {env, webpack, createCSSRule}) {
+    config.plugin("monaco-editor").use(MonacoEditorWebpackPlugin, [{
+      languages: ["go"],
+      features: ["coreCommands", "find", 'comment', "format", 'bracketMatching', 'wordOperations', 'suggest', 'multicursor', 'links']
+    }])
+  }
 });

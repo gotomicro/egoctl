@@ -143,6 +143,15 @@ func (repo *Repository) GetTags() ([]string, error) {
 	return so.Sort(), nil
 }
 
+// git rev-parse HEAD
+func (repo *Repository) GetVersion() (string, error) {
+	stdout, stderr, err := command.ExecCmdDir(repo.Path, "git", "rev-parse", "HEAD")
+	if err != nil {
+		return "", concatenateError(err, stderr)
+	}
+	return stdout, nil
+}
+
 // 获取两个版本之间的修改日志
 func (repo *Repository) GetChangeLogs(startVer, endVer string) ([]string, error) {
 	// git log --pretty=format:"%cd %cn: %s" --date=iso v1.8.0...v1.9.0

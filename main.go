@@ -15,7 +15,6 @@ package main
 
 import (
 	"egoctl/cmd"
-	_ "egoctl/cmd/gen"
 	_ "egoctl/cmd/migrate"
 	_ "egoctl/cmd/run"
 	_ "egoctl/cmd/version"

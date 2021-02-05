@@ -1,11 +1,12 @@
 package web
 
 import (
+	"egoctl/internal/app/module/web/project"
+	"egoctl/internal/app/module/web/template"
 	"egoctl/internal/pkg/system"
 	webui2 "egoctl/webui"
 	"embed"
 	"errors"
-	"fmt"
 	"github.com/BurntSushi/toml"
 	"github.com/gin-gonic/gin"
 	"github.com/gotomicro/ego"
@@ -65,7 +66,6 @@ type WebuiFile struct {
 }
 
 func (*WebuiFile) Readdir(count int) ([]fs.FileInfo, error) {
-	fmt.Println("count", count)
 	return nil, nil
 }
 
@@ -76,6 +76,8 @@ func (c *Container) Run() {
 		elog.Panic("level db open file error", elog.FieldErr(err))
 	}
 	defer c.leveldb.Close()
+	project.InitProjectSrv(c.leveldb)
+	template.InitTemplateSrv(c.leveldb)
 
 	webuiObj := &webui{
 		webuiembed: webui2.WebUI,

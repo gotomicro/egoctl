@@ -11,7 +11,7 @@ const proSettings: DefaultSettings = {
   "contentWidth": "Fluid",
   "fixedHeader": false,
   "fixSiderbar": true,
-  "title": "Ant Design Pro",
+  "title": "EGO Low Code",
   "pwa": false,
   "iconfontUrl": "",
   "menu": {

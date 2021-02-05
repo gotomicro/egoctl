@@ -1,12 +1,12 @@
-package gen
+package parser
 
 import (
 	"egoctl/logger"
 	"errors"
+	"fmt"
 	"go/ast"
 	"go/parser"
 	"go/token"
-	"io/ioutil"
 	"sort"
 	"strings"
 )
@@ -35,11 +35,10 @@ func AstParserBuild(userOption UserOption, tmplOption TmplOption) *astParser {
 }
 
 func (a *astParser) initReadContent() error {
-	readinfo, err := ioutil.ReadFile(a.userOption.ScaffoldDSLFile)
-	if err != nil {
-		return err
+	if a.userOption.ScaffoldDSLContent == "" {
+		return fmt.Errorf("内容不能为空")
 	}
-	a.readContent = string(readinfo)
+	a.readContent = a.userOption.ScaffoldDSLContent
 	return nil
 }
 

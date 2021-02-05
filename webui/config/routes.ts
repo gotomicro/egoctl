@@ -33,6 +33,12 @@
                 component: './Projects',
               },
               {
+                path: '/templates',
+                name: '模板列表',
+                icon: 'smile',
+                component: './Templates',
+              },
+              {
                 path: '/admin',
                 name: 'admin',
                 icon: 'crown',
@@ -47,12 +53,6 @@
                     authority: ['admin'],
                   },
                 ],
-              },
-              {
-                name: 'list.table-list',
-                icon: 'table',
-                path: '/list',
-                component: './TableList',
               },
               {
                 component: './404',

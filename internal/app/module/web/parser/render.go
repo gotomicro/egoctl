@@ -1,9 +1,10 @@
-package gen
+package parser
 
 import (
 	"egoctl/internal/pkg/system"
 	"egoctl/internal/pkg/utils"
 	"egoctl/logger"
+	"fmt"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/flosch/pongo2"
 	"github.com/smartwalle/pongo2render"
@@ -35,7 +36,7 @@ func NewRender(m RenderInfo) *RenderFile {
 	)
 
 	// parse descriptor, get flush file path, beego path, etc...
-	newDescriptor, pathCtx = m.Descriptor.Parse(m.ModelName, m.ModelNames, m.Option.Path)
+	newDescriptor, pathCtx = m.Descriptor.Parse(m.Option, m.ModelName, m.ModelNames, m.Option.Path)
 
 	obj := &RenderFile{
 		Context:      make(pongo2.Context),
@@ -56,7 +57,8 @@ func NewRender(m RenderInfo) *RenderFile {
 		logger.Log.Fatalf("Could not create the controllers directory: %s", err)
 	}
 	// get go package path
-	obj.PkgPath = getPackagePath()
+	obj.PkgPath = getPackagePath(m.Option.ProjectPath)
+	obj.SetContext("packagePath", obj.PkgPath)
 
 	relativePath, err := filepath.Rel(system.CurrentDir, obj.FlushFile)
 	if err != nil {
@@ -76,13 +78,11 @@ func NewRender(m RenderInfo) *RenderFile {
 	obj.SetContext("packageName", obj.PackageName)
 	obj.SetContext("packageImports", importMaps)
 
-	// todo optimize
-	// todo Set the beego directory, should recalculate the package
-	if pathCtx["pathRelEgo"] == "." {
-		obj.SetContext("packagePath", obj.PkgPath)
-	} else {
-		obj.SetContext("packagePath", obj.PkgPath+"/"+pathCtx["pathRelEgo"].(string))
-	}
+	//if pathCtx["pathRelEgo"] == "." {
+	//	obj.SetContext("packagePath", obj.PkgPath)
+	//} else {
+	//	obj.SetContext("packagePath", obj.PkgPath+"/"+pathCtx["pathRelEgo"].(string))
+	//}
 
 	obj.SetContext("packageMod", obj.PkgPath)
 
@@ -105,15 +105,14 @@ func (r *RenderFile) SetContext(key string, value interface{}) {
 	r.Context[key] = value
 }
 
-func (r *RenderFile) Exec(name string) {
+func (r *RenderFile) Exec(name string) error {
 	var (
 		buf string
 		err error
 	)
 	buf, err = r.Render.Template(name).Execute(r.Context)
 	if err != nil {
-		logger.Log.Fatalf("Could not create the %s render tmpl: %s", name, err)
-		return
+		return fmt.Errorf("Could not create the %s render tmpl , err: %w", name, err)
 	}
 	_, err = os.Stat(r.Descriptor.DstPath)
 	var orgContent []byte
@@ -141,9 +140,9 @@ func (r *RenderFile) Exec(name string) {
 	if FileContentChange(orgContent, output, GetSeg(ext)) {
 		err = r.write(r.FlushFile, output)
 		if err != nil {
-			logger.Log.Fatalf("Could not create file: %s", err)
-			return
+			return fmt.Errorf("创建文件失败, err: %w", err)
 		}
 		logger.Log.Infof("create file '%s' from %s", r.FlushFile, r.PackageName)
 	}
+	return nil
 }
