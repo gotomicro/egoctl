@@ -1,4 +1,4 @@
-module egoctl
+module github.com/gotomicro/egoctl
 
 go 1.16
 
