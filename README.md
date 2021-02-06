@@ -3,11 +3,11 @@
 - Go version >= 1.16.
 
 ## 2 Installation
-
+go get github.com/gotomicro/ego
 
 
 ## 3 快速生成代码
-* 启动web egoctl web start
+* 启动web: egoctl web start
 * 访问http://127.0.0.1:9999
 * 如下所示
 
