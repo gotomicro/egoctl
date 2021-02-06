@@ -23,6 +23,10 @@
             component: '../layouts/BasicLayout',
             routes: [
               {
+                path: '/webui/',
+                redirect: '/projects',
+              },
+              {
                 path: '/',
                 redirect: '/projects',
               },

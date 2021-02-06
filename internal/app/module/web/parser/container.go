@@ -16,17 +16,15 @@ const (
 	MDateFormat = "20060102_150405"
 )
 
-var DefaultEgoctlPro = &Container{
-	GenerateTime:     time.Now().Format(MDateFormat),
-	GenerateTimeUnix: time.Now().Unix(),
-	TmplOption:       TmplOption{},
-	CurPath:          system.CurrentDir,
-	EnableModules:    make(map[string]interface{}), // get the user configuration, get the enable module result
-	FunctionOnce:     make(map[string]sync.Once),   // get the tmpl configuration, get the function once result
-}
-
 func NewParser(option UserOption) *Container {
-	obj := DefaultEgoctlPro
+	obj := &Container{
+		GenerateTime:     time.Now().Format(MDateFormat),
+		GenerateTimeUnix: time.Now().Unix(),
+		TmplOption:       TmplOption{},
+		CurPath:          system.CurrentDir,
+		EnableModules:    make(map[string]interface{}), // get the user configuration, get the enable module result
+		FunctionOnce:     make(map[string]sync.Once),   // get the tmpl configuration, get the function once result
+	}
 	obj.UserOption = option
 	return obj
 }

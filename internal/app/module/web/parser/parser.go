@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"egoctl/logger"
 	"errors"
 	"fmt"
 	"go/ast"
@@ -27,7 +26,6 @@ func AstParserBuild(userOption UserOption, tmplOption TmplOption) *astParser {
 	}
 	err := a.initReadContent()
 	if err != nil {
-		logger.Log.Fatalf("egoctl parse struct error, err: %s", err)
 		return nil
 	}
 	a.parserStruct()

@@ -1,50 +1,71 @@
 # egoctl
-## Requirements
+## 1 Requirements
+- Go version >= 1.16.
 
-- Go version >= 1.13.
-
-## Installation
+## 2 Installation
 
 
-## 快速上手
 
+## 3 快速生成代码
+* 启动web egoctl web start
+* 访问http://127.0.0.1:9999
+* 如下所示
+
+![](./docs/images/lowcode-home.png)
+
+* 我们第一次进入页面，先配置生成代码的模板，你也可以自己自定义自己的模板
+
+![](./docs/images/lowcode-template.png)
+
+* 然后在进入项目页面，创建项目
+
+![](./docs/images/lowcode-projects.png)
+
+* 编写DSL
+
+![](./docs/images/lowcode-dsl.png)
+
+* 创建项目的go mod
 ```bash
-egoctl -h # 查看使用帮助
+mkdir /Users/askuy/tmp/egotest1 
+cd /Users/askuy/tmp/egotest1 && go mod init egotest1
 ```
-
-### 快速生成代码
-
-- 初始化目录和配置文件
+* 点击生成代码
+* 运行你的代码
 ```bash
-# 创建demo目录
-mkdir -p ~/demo
-
-# 下载egoctl.toml样例配置
-cd ~/demo
-go mod init demo
-wget https://github.com/gotomicro/egoctl-tmpls/blob/main/example/egoctl.toml
-wget https://github.com/gotomicro/egoctl-tmpls/blob/main/example/egoctl.go
-egoctl gen code 
+cd /Users/askuy/tmp/egotest1
+go mod tidy
+vim config/local.toml 更改db配置
+export EGO_DEBUG=true && go run main.go
 ```
-### 用户配置待补充
 
-
-### 模板配置
-#### 1 根据模型设置模板
-用户配置
+## 4 DSL配置
 ```
+package egoctl
 type User struct {
 	Uid int `gorm:"AUTO_INCREMENT" json:"id" dto:"" ego:"primary_key"`                      // id
     UserName string `gorm:"not null" json:"userName" dto:""` // 昵称
 }
 ```
-##### 1.1 获取主键 
+
+
+## 5 模板配置
+### 5.1 根据模型设置模板
+DSL配置
+```
+package egoctl
+type User struct {
+	Uid int `gorm:"AUTO_INCREMENT" json:"id" dto:"" ego:"primary_key"`                      // id
+    UserName string `gorm:"not null" json:"userName" dto:""` // 昵称
+}
+```
+### 5.2 获取主键 
 模版配置
 ```
 {{modelSchemas|fieldsGetPrimaryKey|snakeString}}
 ```
 
-##### 1.2 生成结构体
+### 5.3 生成结构体
 模板配置
 ```
 type {{modelName|upperFirst}} struct {
@@ -54,15 +75,15 @@ type {{modelName|upperFirst}} struct {
 }
 ```
 
-##### 1.3 判断某字段是否存在
+### 5.4 判断某字段是否存在
 模板配置
 ```
 {% if modelSchemas|fieldsExist:Uid %}
 {% endif %}
 ```
 
-#### 2 根据单个字段设置模板
-用户配置
+## 6 根据单个字段设置模板
+DSL配置
 ```
 type User struct {
 	Uid int `gorm:"AUTO_INCREMENT" json:"id" dto:"" ego:"primary_key"`                      // id
@@ -70,13 +91,13 @@ type User struct {
 }
 ```
 
-##### 2.1 获取某个字段的驼峰（常用于JSON，前后端对接）
+### 6.1 获取某个字段的驼峰（常用于JSON，前后端对接）
 ```
 {{value.FieldName|camelString|lowerFirst}}
 UserName  变成   userName
 ```
 
-##### 2.2 获取某个字段的蛇形（常用于数据库）
+### 6.2 获取某个字段的蛇形（常用于数据库）
 ```
 {{value.FieldName|snakeString|lowerFirst}}
 UserName  变成   user_name

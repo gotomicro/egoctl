@@ -39,8 +39,9 @@ export default defineConfig({
   ignoreMomentLocale: true,
   proxy: proxy[REACT_APP_ENV || 'dev'],
   manifest: {
-    basePath: '/',
+    basePath: '/webui/',
   },
+  publicPath: '/webui/',
   esbuild: {},
   chainWebpack(config, {env, webpack, createCSSRule}) {
     config.plugin("monaco-editor").use(MonacoEditorWebpackPlugin, [{

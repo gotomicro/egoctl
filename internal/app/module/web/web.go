@@ -69,6 +69,23 @@ func (*WebuiFile) Readdir(count int) ([]fs.FileInfo, error) {
 	return nil, nil
 }
 
+type webuiIndex struct {
+	webuiembed embed.FS
+	path       string
+}
+
+func (w *webuiIndex) Open(name string) (http.File, error) {
+	if filepath.Separator != '/' && strings.ContainsRune(name, filepath.Separator) {
+		return nil, errors.New("http: invalid character in file path")
+	}
+	fullName := filepath.Join(w.path, filepath.FromSlash(path.Clean("/index.html")))
+	file, err := w.webuiembed.Open(fullName)
+	wf := &WebuiFile{
+		File: file,
+	}
+	return wf, err
+}
+
 func (c *Container) Run() {
 	var err error
 	c.leveldb, err = leveldb.OpenFile(c.DataPath, nil)
@@ -84,14 +101,26 @@ func (c *Container) Run() {
 		path:       "dist",
 	}
 
+	webuiIndexObj := &webuiIndex{
+		webuiembed: webui2.WebUI,
+		path:       "dist",
+	}
 	econf.LoadFromReader(strings.NewReader(config), toml.Unmarshal)
 	if err := ego.New().Serve(func() *egin.Component {
 		server := egin.Load("server.http").Build()
-
-		server.NoRoute(func(context *gin.Context) {
-			context.FileFromFS(context.Request.URL.Path, webuiObj)
+		server.GET("/", func(ctx *gin.Context) {
+			ctx.Redirect(302, "/projects")
+			return
 		})
 
+		server.GET("/projects", func(context *gin.Context) {
+			context.FileFromFS("/projects", webuiIndexObj)
+		})
+		server.GET("/templates", func(context *gin.Context) {
+			context.FileFromFS("/templates", webuiIndexObj)
+		})
+
+		server.StaticFS("/webui/", webuiObj)
 		c.API(server)
 		server.GET("/hello", func(ctx *gin.Context) {
 			ctx.JSON(200, "Hello EGO")
