@@ -1,12 +1,12 @@
 package parser
 
 import (
-	"egoctl/internal/pkg/command"
-	"egoctl/internal/pkg/system"
-	"egoctl/logger"
-	"egoctl/utils"
 	"fmt"
 	"github.com/flosch/pongo2"
+	"github.com/gotomicro/egoctl/internal/pkg/command"
+	"github.com/gotomicro/egoctl/internal/pkg/system"
+	"github.com/gotomicro/egoctl/logger"
+	"github.com/gotomicro/egoctl/utils"
 	"github.com/smartwalle/pongo2render"
 	"path/filepath"
 	"strings"

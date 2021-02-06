@@ -1,12 +1,12 @@
 package project
 
 import (
-	"egoctl/internal/app/module/web/constx"
-	"egoctl/internal/app/module/web/parser"
-	"egoctl/internal/app/module/web/template"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/gotomicro/egoctl/internal/app/module/web/constx"
+	"github.com/gotomicro/egoctl/internal/app/module/web/parser"
+	"github.com/gotomicro/egoctl/internal/app/module/web/template"
 	"github.com/syndtr/goleveldb/leveldb"
 	"sync"
 	"time"

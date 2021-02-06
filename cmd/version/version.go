@@ -13,11 +13,11 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 
-	"egoctl/cmd"
-	"egoctl/config"
-	"egoctl/logger"
-	"egoctl/logger/colors"
-	"egoctl/utils"
+	"github.com/gotomicro/egoctl/cmd"
+	"github.com/gotomicro/egoctl/config"
+	"github.com/gotomicro/egoctl/logger"
+	"github.com/gotomicro/egoctl/logger/colors"
+	"github.com/gotomicro/egoctl/utils"
 )
 
 const verboseVersionBanner string = `%s%s

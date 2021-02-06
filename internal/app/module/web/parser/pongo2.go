@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"egoctl/utils"
 	"github.com/flosch/pongo2"
+	"github.com/gotomicro/egoctl/utils"
 	"strings"
 	"unicode/utf8"
 )

@@ -1,10 +1,6 @@
 package web
 
 import (
-	"egoctl/internal/app/module/web/project"
-	"egoctl/internal/app/module/web/template"
-	"egoctl/internal/pkg/system"
-	webui2 "egoctl/webui"
 	"embed"
 	"errors"
 	"github.com/BurntSushi/toml"
@@ -13,6 +9,10 @@ import (
 	"github.com/gotomicro/ego/core/econf"
 	"github.com/gotomicro/ego/core/elog"
 	"github.com/gotomicro/ego/server/egin"
+	"github.com/gotomicro/egoctl/internal/app/module/web/project"
+	"github.com/gotomicro/egoctl/internal/app/module/web/template"
+	"github.com/gotomicro/egoctl/internal/pkg/system"
+	webui2 "github.com/gotomicro/egoctl/webui"
 	"github.com/syndtr/goleveldb/leveldb"
 	"io"
 	"io/fs"

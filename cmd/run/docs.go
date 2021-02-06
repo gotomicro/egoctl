@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"egoctl/logger"
+	"github.com/gotomicro/egoctl/logger"
 )
 
 var (

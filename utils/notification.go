@@ -21,7 +21,7 @@ import (
 
 	"runtime"
 
-	"egoctl/config"
+	"github.com/gotomicro/egoctl/config"
 )
 
 const appName = "Beego"

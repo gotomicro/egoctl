@@ -6,7 +6,7 @@ import (
 	"text/template"
 	"time"
 
-	"egoctl/logger"
+	"github.com/gotomicro/egoctl/logger"
 )
 
 var (

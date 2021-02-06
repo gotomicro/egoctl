@@ -32,10 +32,10 @@ import (
 	"time"
 	"unicode"
 
-	"egoctl/config"
-	"egoctl/internal/pkg/system"
-	"egoctl/logger"
-	"egoctl/logger/colors"
+	"github.com/gotomicro/egoctl/config"
+	"github.com/gotomicro/egoctl/internal/pkg/system"
+	"github.com/gotomicro/egoctl/logger"
+	"github.com/gotomicro/egoctl/logger/colors"
 )
 
 type tagName struct {

@@ -1,13 +1,13 @@
 package template
 
 import (
-	"egoctl/internal/app/module/web/constx"
-	"egoctl/internal/pkg/git"
-	"egoctl/internal/pkg/system"
-	"egoctl/internal/pkg/utils"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/gotomicro/egoctl/internal/app/module/web/constx"
+	"github.com/gotomicro/egoctl/internal/pkg/git"
+	"github.com/gotomicro/egoctl/internal/pkg/system"
+	"github.com/gotomicro/egoctl/internal/pkg/utils"
 	"github.com/syndtr/goleveldb/leveldb"
 	"net/url"
 	"strings"

@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"egoctl/internal/pkg/utils"
-	"egoctl/logger"
+	"github.com/gotomicro/egoctl/internal/pkg/utils"
+	"github.com/gotomicro/egoctl/logger"
 )
 
 const (

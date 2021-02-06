@@ -14,14 +14,14 @@
 package main
 
 import (
-	"egoctl/cmd"
-	_ "egoctl/cmd/migrate"
-	_ "egoctl/cmd/run"
-	_ "egoctl/cmd/version"
-	_ "egoctl/cmd/web"
-	"egoctl/config"
 	_ "embed"
 	"fmt"
+	"github.com/gotomicro/egoctl/cmd"
+	_ "github.com/gotomicro/egoctl/cmd/migrate"
+	_ "github.com/gotomicro/egoctl/cmd/run"
+	_ "github.com/gotomicro/egoctl/cmd/version"
+	_ "github.com/gotomicro/egoctl/cmd/web"
+	"github.com/gotomicro/egoctl/config"
 	"os"
 )
 

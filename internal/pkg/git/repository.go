@@ -1,11 +1,11 @@
 package git
 
 import (
-	"egoctl/internal/pkg/command"
-	"egoctl/internal/pkg/utils"
-	"egoctl/logger"
 	"errors"
 	"fmt"
+	"github.com/gotomicro/egoctl/internal/pkg/command"
+	"github.com/gotomicro/egoctl/internal/pkg/utils"
+	"github.com/gotomicro/egoctl/logger"
 	"path/filepath"
 	"sort"
 	"strconv"

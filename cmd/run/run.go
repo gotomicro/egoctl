@@ -22,11 +22,11 @@ import (
 
 	"github.com/spf13/cobra"
 
-	cmd2 "egoctl/cmd"
-	"egoctl/cmd/version"
-	"egoctl/config"
-	"egoctl/logger"
-	"egoctl/utils"
+	cmd2 "github.com/gotomicro/egoctl/cmd"
+	"github.com/gotomicro/egoctl/cmd/version"
+	"github.com/gotomicro/egoctl/config"
+	"github.com/gotomicro/egoctl/logger"
+	"github.com/gotomicro/egoctl/utils"
 )
 
 var CmdRun = &cobra.Command{

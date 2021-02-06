@@ -1,10 +1,10 @@
 package web
 
 import (
-	"egoctl/internal/app/module/web/core"
-	"egoctl/internal/app/module/web/project"
-	"egoctl/internal/app/module/web/template"
 	"github.com/gotomicro/ego/server/egin"
+	"github.com/gotomicro/egoctl/internal/app/module/web/core"
+	"github.com/gotomicro/egoctl/internal/app/module/web/project"
+	"github.com/gotomicro/egoctl/internal/app/module/web/template"
 	"github.com/gotomicro/gotoant"
 )
 

@@ -1,8 +1,8 @@
 package gen
 
 import (
-	"egoctl/cmd"
-	"egoctl/internal/app/module/web"
+	"github.com/gotomicro/egoctl/cmd"
+	"github.com/gotomicro/egoctl/internal/app/module/web"
 	"github.com/spf13/cobra"
 )
 

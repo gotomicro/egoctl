@@ -1,12 +1,12 @@
 package parser
 
 import (
-	"egoctl/internal/pkg/system"
-	"egoctl/internal/pkg/utils"
-	"egoctl/logger"
 	"fmt"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/flosch/pongo2"
+	"github.com/gotomicro/egoctl/internal/pkg/system"
+	"github.com/gotomicro/egoctl/internal/pkg/utils"
+	"github.com/gotomicro/egoctl/logger"
 	"github.com/smartwalle/pongo2render"
 	"go/format"
 	"io/ioutil"

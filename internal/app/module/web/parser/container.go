@@ -1,12 +1,12 @@
 package parser
 
 import (
-	"egoctl/internal/app/module/web/constx"
-	"egoctl/internal/pkg/system"
-	"egoctl/internal/pkg/utils"
-	"egoctl/logger"
 	"fmt"
 	"github.com/davecgh/go-spew/spew"
+	"github.com/gotomicro/egoctl/internal/app/module/web/constx"
+	"github.com/gotomicro/egoctl/internal/pkg/system"
+	"github.com/gotomicro/egoctl/internal/pkg/utils"
+	"github.com/gotomicro/egoctl/logger"
 	"github.com/pelletier/go-toml"
 	"sync"
 	"time"

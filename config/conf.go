@@ -21,7 +21,7 @@ import (
 
 	"gopkg.in/yaml.v2"
 
-	"egoctl/logger"
+	"github.com/gotomicro/egoctl/logger"
 )
 
 const confVer = 0

@@ -20,7 +20,7 @@ import (
 
 	"github.com/gorilla/websocket"
 
-	"egoctl/logger"
+	"github.com/gotomicro/egoctl/logger"
 )
 
 // wsBroker maintains the set of active clients and broadcasts messages to the clients.
