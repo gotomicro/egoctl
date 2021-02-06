@@ -90,7 +90,7 @@ func (c *Container) Run() {
 	var err error
 	c.leveldb, err = leveldb.OpenFile(c.DataPath, nil)
 	if err != nil {
-		elog.Panic("level db open file error", elog.FieldErr(err))
+		elog.Panic("level db open file error", elog.FieldErr(err), elog.FieldName(c.DataPath))
 	}
 	defer c.leveldb.Close()
 	project.InitProjectSrv(c.leveldb)
