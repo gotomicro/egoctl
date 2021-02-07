@@ -3,7 +3,7 @@
 - Go version >= 1.16.
 
 ## 2 Installation
-go install github.com/gotomicro/egoctl
+go install github.com/gotomicro/egoctl@latest
 
 
 ## 3 快速生成代码
@@ -43,7 +43,7 @@ export EGO_DEBUG=true && go run main.go
 ```
 package egoctl
 type User struct {
-	Uid int `gorm:"AUTO_INCREMENT" json:"id" dto:"" ego:"primary_key"`                      // id
+	Uid int `gorm:"AUTO_INCREMENT" json:"id" dto:"" ego:"primary_key"`    // id
     UserName string `gorm:"not null" json:"userName" dto:""` // 昵称
 }
 ```
