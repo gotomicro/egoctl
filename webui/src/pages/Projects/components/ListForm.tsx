@@ -5,8 +5,8 @@ import api from "@/services/api";
 interface ListFormProps {
   modalVisible: boolean;
   formTitle: string;
-  initialValues: {};
-  onSubmit: () => void;
+  initialValues?: {};
+  onSubmit: (value:any) => void;
   onCancel: () => void;
 }
 
@@ -65,6 +65,7 @@ const ListForm: React.FC<ListFormProps> = (props) => {
 
   return (
     <Modal
+      width={1000}
       destroyOnClose
       title={formTitle}
       visible={modalVisible}

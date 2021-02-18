@@ -3,6 +3,7 @@ import {PageHeaderWrapper} from '@ant-design/pro-layout';
 import React, {Fragment, useRef, useState} from 'react';
 import ListForm from "./components/ListForm"
 import Editor from "./components/Editor"
+import Render from "./components/Render"
 import {PlusOutlined} from '@ant-design/icons';
 import SearchTable, {SearchTableInstance} from '@/components/SearchTable';
 import api from "@/services/api";
@@ -69,6 +70,7 @@ const TableList: React.FC<{}> = () => {
   const [createModalVisible, handleCreateModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [editorModalVisible, handleEditorModalVisible] = useState<boolean>(false);
+  const [renderModalVisible, handleRenderModalVisible] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState({});
   const [form] = Form.useForm();
   const actionRef = useRef<SearchTableInstance>();
@@ -137,6 +139,15 @@ const TableList: React.FC<{}> = () => {
             }}
           >
             生成代码
+          </a>
+          <Divider type="vertical"/>
+          <a
+            onClick={() => {
+              setInitialValues(record);
+              handleRenderModalVisible(true);
+            }}
+          >
+            获取数据
           </a>
           <Divider type="vertical"/>
           <a
@@ -253,6 +264,14 @@ const TableList: React.FC<{}> = () => {
           handleEditorModalVisible(false)
         }}
         modalVisible={editorModalVisible}
+        initialValues={initialValues}
+      />
+      <Render
+        formTitle={"展示渲染数据"}
+        onCancel={() => {
+          handleRenderModalVisible(false)
+        }}
+        modalVisible={renderModalVisible}
         initialValues={initialValues}
       />
     </PageHeaderWrapper>

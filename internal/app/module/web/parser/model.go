@@ -2,6 +2,7 @@ package parser
 
 import (
 	"reflect"
+	"strings"
 )
 
 type SpecAnnotation struct {
@@ -46,9 +47,9 @@ type SpecTags struct {
 }
 
 type SpecTag struct {
-	Name   string   // tag名称
-	Origin string   // 原始数据，例如 json的名称
-	Value  []string // tag的数组值
+	Name   string   `json:"name"`   // tag名称
+	Origin string   `json:"origin"` // 原始数据，例如 json的名称
+	Value  []string `json:"value"`  // tag的数组值
 }
 
 type SpecType struct {
@@ -62,7 +63,11 @@ func (content SpecType) ToModelInfos() (output []ModelSchema) {
 	for _, member := range content.Members {
 		comment := content.Name
 		if len(member.Comments) > 0 {
-			comment = member.Comments[0]
+			// 去除双斜线，只留斜线内容
+			if strings.HasPrefix(member.Comments[0], "//") {
+				comment = strings.TrimPrefix(member.Comments[0], "//")
+				comment = strings.TrimSpace(comment)
+			}
 		}
 
 		tags := make(map[string]SpecTag, 0)

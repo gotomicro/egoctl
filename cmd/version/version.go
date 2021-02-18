@@ -1,14 +1,10 @@
 package version
 
 import (
-	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"os"
-	path "path/filepath"
-	"regexp"
 
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
@@ -17,7 +13,6 @@ import (
 	"github.com/gotomicro/egoctl/config"
 	"github.com/gotomicro/egoctl/logger"
 	"github.com/gotomicro/egoctl/logger/colors"
-	"github.com/gotomicro/egoctl/utils"
 )
 
 const verboseVersionBanner string = `%s%s
@@ -112,49 +107,4 @@ func versionCmd(cmd *cobra.Command, args []string) {
 func ShowShortVersionBanner() {
 	output := colors.NewColorWriter(os.Stdout)
 	InitBanner(output, bytes.NewBufferString(colors.MagentaBold(shortVersionBanner)))
-}
-
-func GetEgoVersion() string {
-	re, err := regexp.Compile(`VERSION = "([0-9.]+)"`)
-	if err != nil {
-		return ""
-	}
-	wgopath := utils.GetGOPATHs()
-	if len(wgopath) == 0 {
-		logger.Log.Error("GOPATH environment is empty,may be you use `go module`")
-		return ""
-	}
-	for _, wg := range wgopath {
-		wg, _ = path.EvalSymlinks(path.Join(wg, "src", "github.com", "gotomicro", "ego"))
-		filename := path.Join(wg, "beego.go")
-		_, err := os.Stat(filename)
-		if err != nil {
-			if os.IsNotExist(err) {
-				continue
-			}
-			logger.Log.Error("Error while getting stats of 'beego.go'")
-		}
-		fd, err := os.Open(filename)
-		if err != nil {
-			logger.Log.Error("Error while reading 'beego.go'")
-			continue
-		}
-		reader := bufio.NewReader(fd)
-		for {
-			byteLine, _, er := reader.ReadLine()
-			if er != nil && er != io.EOF {
-				return ""
-			}
-			if er == io.EOF {
-				break
-			}
-			line := string(byteLine)
-			s := re.FindStringSubmatch(line)
-			if len(s) >= 2 {
-				return s[1]
-			}
-		}
-
-	}
-	return "Ego is not installed. Please do consider installing it first: https://github.com/gotomicro/ego"
 }

@@ -10,7 +10,8 @@ import (
 
 func (c *Container) API(component *egin.Component) {
 	component.GET("/api/projects", core.Handle(c.apiProjectList))
-	component.GET("/api/projects/gen", core.Handle(c.apiProjectGen)) // 生成代码
+	component.GET("/api/projects/gen", core.Handle(c.apiProjectGen))       // 生成代码
+	component.GET("/api/projects/render", core.Handle(c.apiProjectRender)) // 生成代码
 	component.POST("/api/projects", core.Handle(c.apiProjectCreate))
 	component.PUT("/api/projects", core.Handle(c.apiProjectUpdate))
 	component.PUT("/api/projects/dsl", core.Handle(c.apiProjectDSL))
@@ -45,6 +46,22 @@ func (c *Container) apiProjectGen(ctx *core.Context) {
 		return
 	}
 	ctx.JSONOK()
+}
+
+// 获取项目渲染数据
+func (c *Container) apiProjectRender(ctx *core.Context) {
+	req := project.InfoUniqId{}
+	err := ctx.Bind(&req)
+	if err != nil {
+		ctx.JSONE(1, "获取参数失败: err"+err.Error(), err)
+		return
+	}
+	info, err := project.Srv.ProjectRender(req)
+	if err != nil {
+		ctx.JSONE(1, "获取数据失败: err"+err.Error(), err)
+		return
+	}
+	ctx.JSONOK(info)
 }
 
 func (c *Container) apiProjectCreate(ctx *core.Context) {

@@ -45,7 +45,7 @@ export default defineConfig({
   esbuild: {},
   chainWebpack(config, {env, webpack, createCSSRule}) {
     config.plugin("monaco-editor").use(MonacoEditorWebpackPlugin, [{
-      languages: ["go"],
+      languages: ["go","json"],
       features: ["coreCommands", "find", 'comment', "format", 'bracketMatching', 'wordOperations', 'suggest', 'multicursor', 'links']
     }])
   }

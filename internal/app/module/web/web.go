@@ -14,7 +14,6 @@ import (
 	"github.com/gotomicro/egoctl/internal/pkg/system"
 	webui2 "github.com/gotomicro/egoctl/webui"
 	"github.com/syndtr/goleveldb/leveldb"
-	"io"
 	"io/fs"
 	"net/http"
 	"path"
@@ -43,49 +42,6 @@ enableAsync=false
 host="0.0.0.0"
 port=9999`
 
-type webui struct {
-	webuiembed embed.FS
-	path       string
-}
-
-func (w *webui) Open(name string) (http.File, error) {
-	if filepath.Separator != '/' && strings.ContainsRune(name, filepath.Separator) {
-		return nil, errors.New("http: invalid character in file path")
-	}
-	fullName := filepath.Join(w.path, filepath.FromSlash(path.Clean("/"+name)))
-	file, err := w.webuiembed.Open(fullName)
-	wf := &WebuiFile{
-		File: file,
-	}
-	return wf, err
-}
-
-type WebuiFile struct {
-	io.Seeker
-	fs.File
-}
-
-func (*WebuiFile) Readdir(count int) ([]fs.FileInfo, error) {
-	return nil, nil
-}
-
-type webuiIndex struct {
-	webuiembed embed.FS
-	path       string
-}
-
-func (w *webuiIndex) Open(name string) (http.File, error) {
-	if filepath.Separator != '/' && strings.ContainsRune(name, filepath.Separator) {
-		return nil, errors.New("http: invalid character in file path")
-	}
-	fullName := filepath.Join(w.path, filepath.FromSlash(path.Clean("/index.html")))
-	file, err := w.webuiembed.Open(fullName)
-	wf := &WebuiFile{
-		File: file,
-	}
-	return wf, err
-}
-
 func (c *Container) Run() {
 	var err error
 	c.leveldb, err = leveldb.OpenFile(c.DataPath, nil)
@@ -97,13 +53,13 @@ func (c *Container) Run() {
 	template.InitTemplateSrv(c.leveldb)
 
 	webuiObj := &webui{
-		webuiembed: webui2.WebUI,
+		webuiEmbed: webui2.WebUI,
 		path:       "dist",
 	}
 
-	webuiIndexObj := &webuiIndex{
-		webuiembed: webui2.WebUI,
-		path:       "dist",
+	// 设置Ant Design前端访问，try file到index.html
+	webuiAntIndexObj := &webuiIndex{
+		webui: webuiObj,
 	}
 	econf.LoadFromReader(strings.NewReader(config), toml.Unmarshal)
 	if err := ego.New().Serve(func() *egin.Component {
@@ -114,13 +70,13 @@ func (c *Container) Run() {
 		})
 
 		server.GET("/projects", func(context *gin.Context) {
-			context.FileFromFS("/projects", webuiIndexObj)
+			context.FileFromFS("/projects", http.FS(webuiAntIndexObj))
 		})
 		server.GET("/templates", func(context *gin.Context) {
-			context.FileFromFS("/templates", webuiIndexObj)
+			context.FileFromFS("/templates", http.FS(webuiAntIndexObj))
 		})
 
-		server.StaticFS("/webui/", webuiObj)
+		server.StaticFS("/webui/", http.FS(webuiObj))
 		c.API(server)
 		server.GET("/hello", func(ctx *gin.Context) {
 			ctx.JSON(200, "Hello EGO")
@@ -130,4 +86,29 @@ func (c *Container) Run() {
 	}()).Run(); err != nil {
 		elog.Panic("startup", elog.FieldErr(err))
 	}
+}
+
+// 嵌入普通的静态资源
+type webui struct {
+	webuiEmbed embed.FS // 静态资源
+	path       string   // 设置embed文件到静态资源的相对路径，也就是embed注释里的路径
+}
+
+// 静态资源被访问的核心逻辑
+func (w *webui) Open(name string) (fs.File, error) {
+	if filepath.Separator != '/' && strings.ContainsRune(name, filepath.Separator) {
+		return nil, errors.New("http: invalid character in file path")
+	}
+	fullName := filepath.Join(w.path, filepath.FromSlash(path.Clean("/"+name)))
+	file, err := w.webuiEmbed.Open(fullName)
+	return file, err
+}
+
+// Ant Design前端页面，需要该方式，实现刷新，访问到前端index.html
+type webuiIndex struct {
+	webui *webui
+}
+
+func (w *webuiIndex) Open(name string) (fs.File, error) {
+	return w.webui.Open("index.html")
 }

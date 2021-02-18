@@ -48,7 +48,7 @@ const handleUpdate = async (values) => {
 const TableList: React.FC<{}> = () => {
   const [createModalVisible, handleCreateModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
-  const [updateValues, setUpdateValues] = useState({});
+  const [initialValues, setInitialValues] = useState({});
   const [form] = Form.useForm();
   const actionRef = useRef<SearchTableInstance>();
   const columns = [
@@ -64,7 +64,7 @@ const TableList: React.FC<{}> = () => {
       title: "路径",
       dataIndex: "path",
       key: "path",
-    },{
+    }, {
       title: "状态",
       dataIndex: "statusText",
       key: "statusText",
@@ -82,7 +82,7 @@ const TableList: React.FC<{}> = () => {
                 history.push(`/resource/document/write?columnId=${record.id}`)
               } else {
                 handleUpdateModalVisible(true);
-                setUpdateValues(record);
+                setInitialValues(record);
               }
             }}
           >
@@ -153,7 +153,10 @@ const TableList: React.FC<{}> = () => {
                     marginTop: '10px'
                   }
                 }>
-                  <Button type="primary" onClick={() => handleCreateModalVisible(true)}>
+                  <Button type="primary" onClick={() => {
+                    setInitialValues({mode: "create"})
+                    handleCreateModalVisible(true)
+                  }}>
                     <PlusOutlined/> 新建
                   </Button>
                 </Form>
@@ -168,11 +171,13 @@ const TableList: React.FC<{}> = () => {
         onSubmit={async (value) => {
           const success = handleCreate(value);
           if (success) {
+            setInitialValues({});
             handleCreateModalVisible(false);
             actionRef.current?.refresh();
           }
         }}
         onCancel={() => handleCreateModalVisible(false)}
+        initialValues={initialValues}
         modalVisible={createModalVisible}
       />
       <ListForm
@@ -181,16 +186,16 @@ const TableList: React.FC<{}> = () => {
           const success = await handleUpdate(value);
           if (success) {
             handleUpdateModalVisible(false);
-            setUpdateValues({});
+            setInitialValues({});
             actionRef.current?.refresh();
           }
         }}
         onCancel={() => {
-          setUpdateValues({})
+          setInitialValues({})
           handleUpdateModalVisible(false)
         }}
         modalVisible={updateModalVisible}
-        initialValues={updateValues}
+        initialValues={initialValues}
       />
     </PageHeaderWrapper>
   );

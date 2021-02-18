@@ -2,11 +2,10 @@ package parser
 
 import (
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
+	"github.com/gotomicro/ego/core/elog"
 	"github.com/gotomicro/egoctl/internal/app/module/web/constx"
 	"github.com/gotomicro/egoctl/internal/pkg/system"
 	"github.com/gotomicro/egoctl/internal/pkg/utils"
-	"github.com/gotomicro/egoctl/logger"
 	"github.com/pelletier/go-toml"
 	"sync"
 	"time"
@@ -24,6 +23,9 @@ func NewParser(option UserOption) *Container {
 		CurPath:          system.CurrentDir,
 		EnableModules:    make(map[string]interface{}), // get the user configuration, get the enable module result
 		FunctionOnce:     make(map[string]sync.Once),   // get the tmpl configuration, get the function once result
+		StoreData: StoreData{
+			UserOption: option,
+		},
 	}
 	obj.UserOption = option
 	return obj
@@ -44,13 +46,11 @@ func (c *Container) initUserOption() {
 		c.err = fmt.Errorf("请在%s目录下创建go.mod文件", c.UserOption.ProjectPath)
 		return
 	}
-
 	c.EnableModules["*"] = struct{}{}
-	if c.UserOption.Debug {
-		logger.Log.Infof("c.modules: %+v", c.EnableModules)
-	}
+	c.StoreData.EnableModules = c.EnableModules
 }
 
+// 解析模板配置
 func (c *Container) initTemplateOption() {
 	if c.err != nil {
 		return
@@ -67,9 +67,7 @@ func (c *Container) initTemplateOption() {
 		return
 	}
 
-	if c.UserOption.Debug {
-		utils.DumpWrapper("TEMPLATE-DUMP", func() { spew.Dump(c.TmplOption) })
-	}
+	c.StoreData.TemplateOption = c.TmplOption
 
 	for _, value := range c.TmplOption.Descriptor {
 		if value.Once {
@@ -97,6 +95,7 @@ func (c *Container) initRender() {
 		}
 
 		models := c.parser.GetRenderInfos(desc)
+		c.StoreData.ModelData = models
 		// model table name, model table schema
 		for _, m := range models {
 			// some render exec once
@@ -122,6 +121,11 @@ func (c *Container) renderModel(m RenderInfo) error {
 	// todo optimize
 	m.GenerateTime = c.GenerateTime
 	render := NewRender(m)
+	// 如果只给json数据
+	if c.UserOption.Mode == "json" {
+		return nil
+	}
+
 	err := render.Exec(m.Descriptor.SrcName)
 	if err != nil {
 		return err
@@ -129,8 +133,12 @@ func (c *Container) renderModel(m RenderInfo) error {
 	if render.Descriptor.IsExistScript() {
 		err := render.Descriptor.ExecScript(c.CurPath)
 		if err != nil {
-			logger.Log.Fatalf("egoctl exec shell error, err: %s", err)
+			elog.Errorf("egoctl exec shell error, err: %s", err)
 		}
 	}
 	return nil
+}
+
+func (c *Container) GetRenderData() StoreData {
+	return c.StoreData
 }

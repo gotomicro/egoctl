@@ -15,7 +15,7 @@ const proSettings: DefaultSettings = {
   "pwa": false,
   "iconfontUrl": "",
   "menu": {
-    "locale": true
+    "locale": false,
   },
   "headerHeight": 48,
   "headerRender": false,

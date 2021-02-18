@@ -333,6 +333,40 @@ func (p *projectSrv) ProjectGen(req InfoUniqId) (err error) {
 	return
 }
 
+func (p *projectSrv) ProjectRender(req InfoUniqId) (resp parser.StoreData, err error) {
+	// 防止并发请求
+	info, err := p.ProjectInfo(req)
+	if err != nil {
+		return resp, fmt.Errorf("获取projects失败: %w", err)
+	}
+
+	templateInfo, err := template.Srv.TemplateInfo(template.InfoUniqId{template.GitURL(info.GitRemotePath)})
+	if err != nil {
+		return resp, fmt.Errorf("获取模板信息失败: %w", err)
+	}
+	parserObj := parser.NewParser(parser.UserOption{
+		Mode:               "json",
+		Language:           info.Language,
+		ScaffoldDSLContent: info.DSL,
+		ProType:            info.ProType,
+		ApiPrefix:          info.ApiPrefix,
+		EnableModule:       make([]string, 0),
+		ProjectPath:        info.Path,
+		GitLocalPath:       templateInfo.Path,
+		EnableFormat:       false,
+		Path: map[string]string{
+			"backend": ".",
+		},
+	})
+
+	err = parserObj.Run()
+	if err != nil {
+		return resp, fmt.Errorf("生成代码失败: %w", err)
+	}
+
+	return parserObj.GetRenderData(), nil
+}
+
 func (t *projectSrv) ProjectDelete(info InfoUniqId) (err error) {
 	// 防止并发请求
 	t.l.Lock()

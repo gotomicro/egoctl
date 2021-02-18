@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
+	"github.com/gotomicro/ego/core/elog"
 	"io/ioutil"
 	"os"
 	"path"
@@ -112,7 +113,7 @@ func createPath(filePath string) error {
 func getPackagePath(projectPath string) (packagePath string) {
 	f, err := os.Open(projectPath + "/go.mod")
 	if err != nil {
-		fmt.Println("getPackagePath", err)
+		elog.Error("get packagePath err", elog.FieldErr(err))
 		return
 	}
 	defer f.Close()
@@ -139,7 +140,7 @@ func FileContentChange(org, new []byte, seg string) bool {
 	if orgMd5 != newMd5 {
 		return true
 	}
-	logger.Log.Infof("File has no change in the content")
+	elog.Info("File has no change in the content")
 	return false
 }
 

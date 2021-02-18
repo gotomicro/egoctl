@@ -10,8 +10,8 @@ interface ListFormProps {
 }
 
 const formLayout = {
-  labelCol: {span: 7},
-  wrapperCol: {span: 13},
+  labelCol: {span: 6},
+  wrapperCol: {span: 18},
 };
 
 const ListForm: React.FC<ListFormProps> = (props) => {
@@ -36,6 +36,7 @@ const ListForm: React.FC<ListFormProps> = (props) => {
 
   return (
     <Modal
+      width={1000}
       destroyOnClose
       title={formTitle}
       visible={modalVisible}
@@ -59,6 +60,12 @@ const ListForm: React.FC<ListFormProps> = (props) => {
         >
           <Input/>
         </Form.Item>
+        {initialValues.mode !== "create" && <Form.Item
+          name="path"
+          label="存储路径"
+        >
+          <Input/>
+        </Form.Item>}
       </Form>
     </Modal>
   );

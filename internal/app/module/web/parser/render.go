@@ -4,10 +4,13 @@ import (
 	"fmt"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/flosch/pongo2"
+	"github.com/gotomicro/ego/core/elog"
+	"github.com/gotomicro/egoctl/internal/app/module/web/constx"
 	"github.com/gotomicro/egoctl/internal/pkg/system"
 	"github.com/gotomicro/egoctl/internal/pkg/utils"
 	"github.com/gotomicro/egoctl/logger"
 	"github.com/smartwalle/pongo2render"
+	"go.uber.org/zap"
 	"go/format"
 	"io/ioutil"
 	"os"
@@ -57,7 +60,9 @@ func NewRender(m RenderInfo) *RenderFile {
 		logger.Log.Fatalf("Could not create the controllers directory: %s", err)
 	}
 	// get go package path
-	obj.PkgPath = getPackagePath(m.Option.ProjectPath)
+	if m.Option.Language == constx.LanguageGo {
+		obj.PkgPath = getPackagePath(m.Option.ProjectPath)
+	}
 	obj.SetContext("packagePath", obj.PkgPath)
 
 	relativePath, err := filepath.Rel(system.CurrentDir, obj.FlushFile)
@@ -70,9 +75,8 @@ func NewRender(m RenderInfo) *RenderFile {
 	importMaps := make(map[string]struct{})
 
 	obj.PackageName = filepath.Base(filepath.Dir(relativePath))
-	logger.Log.Infof("Using '%s' as name", obj.ModelName)
 
-	logger.Log.Infof("Using '%s' as package name from %s", obj.ModelName, obj.PackageName)
+	elog.Info("render", zap.String("modelName", obj.ModelName), zap.String("packageName", obj.PackageName))
 
 	// package
 	obj.SetContext("packageName", obj.PackageName)
@@ -142,7 +146,7 @@ func (r *RenderFile) Exec(name string) error {
 		if err != nil {
 			return fmt.Errorf("创建文件失败, err: %w", err)
 		}
-		logger.Log.Infof("create file '%s' from %s", r.FlushFile, r.PackageName)
+		elog.Info("create file", elog.String("packageName", r.PackageName), elog.String("flushFile", r.FlushFile))
 	}
 	return nil
 }

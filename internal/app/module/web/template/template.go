@@ -10,6 +10,7 @@ import (
 	"github.com/gotomicro/egoctl/internal/pkg/utils"
 	"github.com/syndtr/goleveldb/leveldb"
 	"net/url"
+	"regexp"
 	"strings"
 	"sync"
 )
@@ -58,6 +59,11 @@ type InfoUniqId struct {
 type GitURL string
 
 func (u GitURL) Parse() (TmplURL, error) {
+	// 如果不是http和https协议，按git协议解析
+	if !strings.HasPrefix(string(u), "http") && !strings.HasPrefix(string(u), "https") {
+		return parseGit(string(u))
+	}
+
 	urlInfo, err := url.Parse(string(u))
 	if err != nil {
 		return TmplURL{}, err
@@ -69,6 +75,20 @@ func (u GitURL) Parse() (TmplURL, error) {
 
 	return TmplURL{
 		Path: "/" + urlInfo.Host + strings.TrimSuffix(urlInfo.Path, ".git"),
+	}, nil
+}
+
+// git@github.com:gotomicro/egoctl-tmpls.git
+func parseGit(url string) (TmplURL, error) {
+	reg := regexp.MustCompile(`(\w*)@([\w\.]*):([\w\/-]+)\.git`)
+	arr := reg.FindStringSubmatch(url)
+	if len(arr) != 4 {
+		return TmplURL{}, fmt.Errorf("长度不正确")
+	}
+
+	return TmplURL{
+		// host: github.com + path: gotomicro/egoctl-tmpls
+		Path: "/" + arr[2] + "/" + arr[3],
 	}, nil
 }
 
@@ -203,6 +223,7 @@ func (t *templateSrv) TemplateUpdate(info Info) (err error) {
 	for _, value := range list {
 		if value.GitRemotePath == info.GitRemotePath {
 			value.Name = info.Name
+			value.Path = info.Path
 		}
 		listNew = append(listNew, value)
 	}

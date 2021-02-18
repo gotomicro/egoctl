@@ -15,6 +15,14 @@ export default {
       },
     });
   },
+  ProjectRender: async (params: any) => {
+    return request(`/api/projects/render`, {
+      method: "GET",
+      params: {
+        path: params.path,
+      },
+    });
+  },
   ProjectCreate: async (params: any) => {
     return request("/api/projects", {
       method: "POST",

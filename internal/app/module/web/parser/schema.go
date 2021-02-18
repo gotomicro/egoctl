@@ -25,35 +25,43 @@ type Container struct {
 	Timestamp        Timestamp
 	parser           *astParser
 	err              error
+	StoreData        StoreData
 }
 
 // user option
 type UserOption struct {
-	Debug              bool     `json:"debug"`
-	ContextDebug       bool     `json:"contextDebug"`
-	ScaffoldDSLContent string   // ego pro dsl
-	Language           string   `json:"language"`
-	ProType            string   `json:"proType"`
-	ApiPrefix          string   `json:"apiPrefix"`
-	EnableModule       []string `json:"enableModule"`
-	ProjectPath        string
+	Mode               string            `json:"mode"` // mode: tmpl 模板，json json数据
+	ContextDebug       bool              `json:"contextDebug"`
+	ScaffoldDSLContent string            `json:"scaffoldDslContent"`
+	Language           string            `json:"language"`
+	ProType            string            `json:"proType"`
+	ApiPrefix          string            `json:"apiPrefix"`
+	EnableModule       []string          `json:"enableModule"`
+	ProjectPath        string            `json:"projectPath"`
 	GitLocalPath       string            `json:"gitLocalPath"`
 	EnableFormat       bool              `json:"enableFormat"`
 	Path               map[string]string `json:"path"`
 }
 
+type StoreData struct {
+	EnableModules  map[string]interface{} `json:"enableModules"` // 开启的模块
+	UserOption     UserOption             `json:"userOption"`
+	TemplateOption TmplOption             `json:"templateOption"`
+	ModelData      []RenderInfo           `json:"modelData"`
+}
+
 // tmpl option
 type TmplOption struct {
-	RenderPath string `toml:"renderPath"`
-	Descriptor []Descriptor
+	RenderPath string       `toml:"renderPath" json:"renderPath"`
+	Descriptor []Descriptor `json:"descriptor"`
 }
 
 type Descriptor struct {
-	Module  string `toml:"module"`
-	SrcName string `toml:"srcName"`
-	DstPath string `toml:"dstPath"`
-	Once    bool   `toml:"once"`
-	Script  string `toml:"script"`
+	Module  string `toml:"module" json:"module"`
+	SrcName string `toml:"srcName" json:"srcName"`
+	DstPath string `toml:"dstPath" json:"dstPath"`
+	Once    bool   `toml:"once" json:"once"`
+	Script  string `toml:"script" json:"script"`
 }
 
 func (descriptor Descriptor) Parse(option UserOption, modelName string, modelNames []string, paths map[string]string) (newDescriptor Descriptor, ctx pongo2.Context) {
