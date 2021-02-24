@@ -14,13 +14,12 @@ egoctl
 egoctl-linux
 egoctl-darwin
 
-*.log
-*.log.*
 
 *.swp
 *.swo
-.idea
 egoctl.go
 egoctl.toml
 .egoctl.timestamp
 logs
+
+release/
