@@ -18,7 +18,9 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.16
-      - name: Make build
+      - name: Make Mac and Linux
+        run: |
+          make build
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
