@@ -16,13 +16,15 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"os"
+
 	"github.com/gotomicro/egoctl/cmd"
 	_ "github.com/gotomicro/egoctl/cmd/migrate"
+	_ "github.com/gotomicro/egoctl/cmd/pb"
 	_ "github.com/gotomicro/egoctl/cmd/run"
 	_ "github.com/gotomicro/egoctl/cmd/version"
 	_ "github.com/gotomicro/egoctl/cmd/web"
 	"github.com/gotomicro/egoctl/config"
-	"os"
 )
 
 func main() {
