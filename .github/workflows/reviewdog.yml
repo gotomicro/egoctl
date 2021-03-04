@@ -1,9 +1,7 @@
 name: actions
 on:
-  push:
-    branches:
-      - master
   pull_request:
+  push:
 jobs:
   golangci-lint:
     name: runner / golangci-lint
