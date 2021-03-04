@@ -13,7 +13,7 @@ jobs:
         uses: reviewdog/action-golangci-lint@v1
         with:
           golangci_lint_flags: "--enable-all --timeout=10m --exclude-use-default=false --tests=false --disable=gochecknoinits,gochecknoglobals,exhaustive,nakedret,exhaustivestruct"
-          workdir: cmd config internal logger utils
+          workdir: ./
 
   test:
     name: Test
