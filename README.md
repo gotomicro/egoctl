@@ -3,7 +3,8 @@
 - Go version >= 1.16.
 
 ## 2 Installation
-go install github.com/gotomicro/egoctl@latest
+go clone https://hub.fastgit.org/gotomicro/egoctl.git
+go install
 
 
 ## 3 快速生成代码
