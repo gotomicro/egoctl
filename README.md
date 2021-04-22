@@ -4,6 +4,7 @@
 
 ## 2 Installation
 go clone https://hub.fastgit.org/gotomicro/egoctl.git
+
 go install
 
 
