@@ -18,7 +18,7 @@ type astParser struct {
 	tmplOption  TmplOption
 }
 
-func AstParserBuild(userOption UserOption, tmplOption TmplOption) *astParser {
+func AstParserBuild(userOption UserOption, tmplOption TmplOption) (*astParser, error) {
 	a := &astParser{
 		userOption: userOption,
 		tmplOption: tmplOption,
@@ -26,10 +26,10 @@ func AstParserBuild(userOption UserOption, tmplOption TmplOption) *astParser {
 	}
 	err := a.initReadContent()
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	a.parserStruct()
-	return a
+	return a, nil
 }
 
 func (a *astParser) initReadContent() error {
