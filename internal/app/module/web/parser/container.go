@@ -80,7 +80,7 @@ func (c *Container) initParser() {
 	if c.err != nil {
 		return
 	}
-	c.parser = AstParserBuild(c.UserOption, c.TmplOption)
+	c.parser, c.err = AstParserBuild(c.UserOption, c.TmplOption)
 }
 
 func (c *Container) initRender() {
