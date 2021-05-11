@@ -3,10 +3,10 @@
 - Go version >= 1.16.
 
 ## 2 Installation
-go clone https://hub.fastgit.org/gotomicro/egoctl.git
-
+```
+git clone https://hub.fastgit.org/gotomicro/egoctl.git
 go install
-
+```
 
 ## 3 快速生成代码
 * 启动web: egoctl web start
