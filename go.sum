@@ -153,6 +153,8 @@ github.com/gotomicro/gotoant v0.0.0-20210105085109-df5f1354ac30 h1:Nb34vkIlbT1jf
 github.com/gotomicro/gotoant v0.0.0-20210105085109-df5f1354ac30/go.mod h1:04oGQHEWUh4gpo16GSr0ZOAT/2JBFCd4wIMW/N2jtRM=
 github.com/gotomicro/prototool v1.10.1-0.20210830033604-a6fb9b76bf16 h1:GqrmC4Rm8yOnSWL7HqaEa3ElMmwFK58Be6peI8OyTfU=
 github.com/gotomicro/prototool v1.10.1-0.20210830033604-a6fb9b76bf16/go.mod h1:Gm3Hk3q1miWlLtabVvNtCC4DpERhX7Pc5YnOcTq4RCs=
+github.com/gotomicro/prototool v1.10.1-0.20210830042344-7ff76cec90a9 h1:XUU5sG4vmHhF3hhOJ5MgN7Bbibt1UmHwtq6m856XsRY=
+github.com/gotomicro/prototool v1.10.1-0.20210830042344-7ff76cec90a9/go.mod h1:Gm3Hk3q1miWlLtabVvNtCC4DpERhX7Pc5YnOcTq4RCs=
 github.com/grpc-ecosystem/go-grpc-middleware v1.0.0/go.mod h1:FiyG127CGDf3tlThmgyCl78X/SZQqEOJBCDaAfeWzPs=
 github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0/go.mod h1:8NvIoxWQoOIhqOTXgfV/d3M/q6VIi02HzZEHgUlZvzk=
 github.com/grpc-ecosystem/grpc-gateway v1.9.0/go.mod h1:vNeuVxBJEsws4ogUvrchl83t/GYV9WGTSLVdBhOQFDY=
