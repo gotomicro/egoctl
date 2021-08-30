@@ -6,6 +6,7 @@ require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/davecgh/go-spew v1.1.1
 	github.com/flosch/pongo2 v0.0.0-20200529170236-5abacdfa4915
+	github.com/frankban/quicktest v1.13.1 // indirect
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/locales v0.13.0
@@ -23,4 +24,4 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 )
 
-replace github.com/uber/prototool v1.10.0 => github.com/gotomicro/prototool v1.10.1-0.20210304081706-a1439f175b8c
+replace github.com/uber/prototool v1.10.0 => github.com/gotomicro/prototool v1.10.1-0.20210830033604-a6fb9b76bf16
