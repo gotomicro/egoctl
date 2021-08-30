@@ -24,4 +24,4 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 )
 
-replace github.com/uber/prototool v1.10.0 => github.com/gotomicro/prototool v1.10.1-0.20210830033604-a6fb9b76bf16
+replace github.com/uber/prototool v1.10.0 => github.com/gotomicro/prototool v1.10.1-0.20210830042344-7ff76cec90a9
