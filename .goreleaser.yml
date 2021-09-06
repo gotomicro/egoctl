@@ -16,7 +16,8 @@ builds:
     ldflags:
       - -s -w -X {{.ModulePath}}/cmd/version.buildVersion={{.Version}} -X {{.ModulePath}}/cmd/version.buildGitVersion={{.Version}} -X {{.ModulePath}}/cmd/version.buildTag={{.Tag}} -X {{.ModulePath}}/cmd/version.buildStatus=Clean -X {{.ModulePath}}/cmd/version.buildUser=goreleaser -X {{.ModulePath}}/cmd/version.buildHost=goreleaser -X {{.ModulePath}}/cmd/version.buildTime={{.Date}}
 archives:
-  - replacements:
+  - name_template: "egoctl-{{ .Version }}-{{ .Os }}-{{ .Arch }}"
+    replacements:
       darwin: Darwin
       linux: Linux
       windows: Windows
