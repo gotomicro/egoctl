@@ -6,6 +6,15 @@
 ```
 bash <(curl -L https://raw.githubusercontent.com/gotomicro/egoctl/main/getlatest.sh)
 ```
+通过以上脚本自动安装以下工具
+* /usr/local/bin/protoc
+* /usr/local/bin/protoc-gen-go
+* /usr/local/bin/protoc-gen-go-grpc
+* /usr/local/bin/protoc-gen-openapiv2
+* /usr/local/bin/protoc-gen-go-errors
+* /usr/local/bin/protoc-gen-go-http
+* /usr/local/bin/egoctl
+
 
 
 ## 3 快速生成代码
