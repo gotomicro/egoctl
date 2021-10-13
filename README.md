@@ -4,8 +4,9 @@
 
 ## 2 Installation
 ```
-bash <(curl -L https://hub.fastgit.org/gotomicro/egoctl/-/raw/master/getlatest.sh)
+bash <(curl -L https://raw.githubusercontent.com/gotomicro/egoctl/main/getlatest.sh)
 ```
+
 
 ## 3 快速生成代码
 * 启动web: egoctl web start
