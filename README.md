@@ -4,8 +4,7 @@
 
 ## 2 Installation
 ```
-git clone https://hub.fastgit.org/gotomicro/egoctl.git
-go install
+bash <(curl -L https://hub.fastgit.org/gotomicro/egoctl/-/raw/master/getlatest.sh)
 ```
 
 ## 3 快速生成代码
