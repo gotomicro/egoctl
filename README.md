@@ -6,7 +6,7 @@
 ```
 bash <(curl -L https://raw.githubusercontent.com/gotomicro/egoctl/main/getlatest.sh)
 ```
-通过以上脚本自动安装以下工具
+通过以上脚本，可以下载protoc工具全家桶，以及ego的protoc插件和egoctl
 * /usr/local/bin/protoc
 * /usr/local/bin/protoc-gen-go
 * /usr/local/bin/protoc-gen-go-grpc
