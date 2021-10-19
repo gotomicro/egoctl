@@ -20,9 +20,9 @@ protocVersion=3.17.3
 protocGenGoVersion=1.5.2
 protocGenGoGRPCVersion=1.39.1
 protocGenOpenapiv2Version=2.6.0
-protocGenGoErrorsVersion=0.6.14
-protocGenGoTestVersion=0.6.14
-protocGenGoHttpVersion=0.6.14
+protocGenGoErrorsVersion=0.6.16
+protocGenGoTestVersion=0.6.16
+protocGenGoHttpVersion=0.6.16
 egoctlVersion=1.0.6
 githubUrl=https://hub.fastgit.org
 
