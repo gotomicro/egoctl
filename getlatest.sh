@@ -17,7 +17,7 @@ esac
 arch=$(uname -a | awk -F " " '{print $NF}')
 
 protocVersion=3.17.3
-protocGenGoVersion=1.5.2
+protocGenGoVersion=1.27.1
 protocGenGoGRPCVersion=1.39.1
 protocGenOpenapiv2Version=2.6.0
 protocGenGoErrorsVersion=0.6.16
@@ -76,11 +76,12 @@ function down_egoctl() {
     echo -e "\n"
 }
 
+# https://github.com/protocolbuffers/protobuf-go
 function down_protoc_gen_go() {
   echo -e "${CYAN}[egoctl-tools] 下载并配置 protoc-gen-go 中...${NC}"
-  git clone --quiet --depth 1 --branch v${protocGenGoVersion} ${githubUrl}/golang/protobuf ${tmpDir}/protobuf > /dev/null 2>&1
-  cd ${tmpDir}/protobuf/protoc-gen-go && go build
-  sudo cp -f ${tmpDir}/protobuf/protoc-gen-go/protoc-gen-go /usr/local/bin/protoc-gen-go
+  git clone --quiet --depth 1 --branch v${protocGenGoVersion} ${githubUrl}/protocolbuffers/protobuf-go ${tmpDir}/protobuf > /dev/null 2>&1
+  cd ${tmpDir}/protobuf/cmd/protoc-gen-go && go build
+  sudo cp -f ${tmpDir}/protobuf/cmd/protoc-gen-go/protoc-gen-go /usr/local/bin/protoc-gen-go
   echo -e "${GREEN}[egoctl-tools] 下载并配置 protoc-gen-go 成功！${NC}"
   echo -e "\n"
 }
