@@ -17,7 +17,7 @@ esac
 arch=$(uname -a | awk -F " " '{print $NF}')
 
 protocVersion=3.17.3
-protocGenGoVersion=1.5.2
+protocGenGoVersion=1.26.0
 protocGenGoGRPCVersion=1.39.1
 protocGenOpenapiv2Version=2.6.0
 protocGenGoErrorsVersion=0.6.16
