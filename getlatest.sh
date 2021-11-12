@@ -14,7 +14,7 @@ case "${unameOut}" in
     Darwin*)    os=osx;;
     *)          exit 1;;
 esac
-arch=$(uname -a | awk -F " " '{print $NF}')
+arch=$(uname -m)
 
 protocVersion=3.17.3
 protocGenGoVersion=1.27.1
