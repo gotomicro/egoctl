@@ -4,17 +4,33 @@ GREEN='\033[1;32m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
+# 使用方法：./getlatest.sh
+#         os=linux ./getlatest.sh
+#         os=osx ./getlatest.sh
 echo -e "${CYAN}[egoctl-tools] 下载 protoc、google/protobuf、protoc-gen-go、egoctl，根据网络情况，整个过程可能耗时 1-2 分钟左右${NC}"
 echo -e "${CYAN}[egoctl-tools] 安装过程中可能需要输入 root 密码\n${NC}"
 
-os="linux"
-unameOut="$(uname -s)"
-case "${unameOut}" in
-    Linux*)     os=linux;;
-    Darwin*)    os=osx;;
-    *)          exit 1;;
-esac
+unameOut=$(uname -s)
 arch=$(uname -m)
+# 如果未设置os，则自动查询os，可选值linux\osx
+if [[ -z ${os+x} ]]; then
+  case "${unameOut}" in
+      Linux*)     os=linux;;
+      Darwin*)    os=osx;;
+      *)          exit 1;;
+  esac
+fi
+# 根据os可选值linux\osx，设置unameOut、GOOS等变量
+case "${os}" in
+  linux*)     os=linux && unameOut="Linux" && export GOOS=linux;;
+  osx*)    os=osx && unameOut="Darwin" && export GOOS=darwin;;
+  *)          exit 1;;
+esac
+
+echo unameOut:${unameOut}
+echo os:${os}
+echo arch:${arch}
+echo GOOS:${GOOS}
 
 protocVersion=3.17.3
 protocGenGoVersion=1.27.1
@@ -67,8 +83,8 @@ function down_protoc() {
 
 function down_egoctl() {
     echo -e "${CYAN}[egoctl-tools] 下载并配置 $1 中...${NC}"
-    wget -O ${tmpDir}/$1-${os}.tar.gz $2 -q --show-progress
-    tar -C ${tmpDir} -xvf ${tmpDir}/$1-${os}.tar.gz
+    wget -O ${tmpDir}/$1-${unameOut}.tar.gz $2 -q --show-progress
+    tar -C ${tmpDir} -xvf ${tmpDir}/$1-${unameOut}.tar.gz
     chmod +x ${tmpDir}/$1
     sudo cp -f ${tmpDir}/$1 /usr/local/bin/$1
     echo -e "${GREEN}[egoctl-tools] 下载并配置 $1 成功！${NC}"
@@ -129,6 +145,14 @@ down_egoctl egoctl ${githubUrl}/gotomicro/egoctl/releases/download/v${egoctlVers
 
 echo -e "${GREEN}[egoctl-tools] 配置 protoc protoc-gen-go、protoc-gen-go-grpc、protoc-gen-openapiv2、protoc-gen-go-errors、protoc-gen-go-http、egoctl 成功!${NC}"
 which protoc protoc-gen-go protoc-gen-go-grpc protoc-gen-openapiv2 protoc-gen-go-errors protoc-gen-go-http egoctl
+
+echo "protoc version:" $(/usr/local/bin/protoc --version)
+echo "protoc-gen-go version:" $(/usr/local/bin/protoc-gen-go -version)
+echo "protoc-gen-go-grpc version:" $(/usr/local/bin/protoc-gen-go-grpc -version)
+echo "protoc-gen-openapiv2 version:" $(/usr/local/bin/protoc-gen-openapiv2 -version)
+echo "protoc-gen-go-errors version:" $(/usr/local/bin/protoc-gen-go-errors -version)
+echo "protoc-gen-go-http version:" $(/usr/local/bin/protoc-gen-go-http -version)
+echo "egoctl version:" $(/usr/local/bin/egoctl version | grep buildGitVersion)
 
 echo -e "\n"
 exit 0
