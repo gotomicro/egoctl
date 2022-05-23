@@ -20,11 +20,11 @@ protocVersion=3.17.3
 protocGenGoVersion=1.27.1
 protocGenGoGRPCVersion=1.39.1
 protocGenOpenapiv2Version=2.6.0
-protocGenGoErrorsVersion=0.6.16
-protocGenGoTestVersion=0.6.16
-protocGenGoHttpVersion=0.6.16
+protocGenGoErrorsVersion=1.1.1
+protocGenGoTestVersion=1.1.1
+protocGenGoHttpVersion=1.1.1
 egoctlVersion=1.0.6
-githubUrl=https://hub.fastgit.org
+githubUrl=https://github.com
 
 # 初始化目标目录
 targetDir=""
@@ -43,7 +43,6 @@ rm -rf ${tmpDir}/*
 mkdir -p ${tmpDir}
 cd ${tmpDir}
 
-
 function down_protoc() {
     echo -e "${CYAN}[egoctl-tools] 需要下载 protoc-${protocVersion} 并移动至 ${targetDir} 下么？${NC} (y/n)"
     read download
@@ -51,7 +50,7 @@ function down_protoc() {
         echo -e "${CYAN}[egoctl-tools] 下载并配置 protoc、google/protobuf 中...${NC}"
         protocTmp=${tmpDir}/protoc-${protocVersion}
         protoZip=protoc-${protocVersion}-${os}-x86_64.zip
-        wget ${githubUrl}/protocolbuffers/protobuf/releases/download/v${protocVersion}/${protoZip} -q --show-progress
+        wget ${githubUrl}/protocolbuffers/protobuf/releases/download/v${protocVersion}/${protoZip} --show-progress
         unzip -q -o $protoZip -d ${protocTmp}
 
         # 复制protoc到目标目录，并软链到/usr/local/bin下
