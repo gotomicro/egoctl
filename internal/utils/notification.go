@@ -16,12 +16,11 @@ package utils
 import (
 	"fmt"
 	"os/exec"
+	"runtime"
 	"strconv"
 	"strings"
 
-	"runtime"
-
-	"github.com/gotomicro/egoctl/config"
+	"github.com/gotomicro/egoctl/internal/config"
 )
 
 const appName = "Beego"

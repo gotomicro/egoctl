@@ -9,4 +9,3 @@ import (
 func init() {
 	cmd.RootCommand.AddCommand(pcmd.GetCommand())
 }
-

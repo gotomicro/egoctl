@@ -24,7 +24,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/gotomicro/egoctl/logger/colors"
+	"github.com/gotomicro/egoctl/internal/logger/colors"
 )
 
 var errInvalidLogLevel = errors.New("logger: invalid log level")

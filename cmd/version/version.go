@@ -10,9 +10,9 @@ import (
 	"gopkg.in/yaml.v2"
 
 	"github.com/gotomicro/egoctl/cmd"
-	"github.com/gotomicro/egoctl/config"
-	"github.com/gotomicro/egoctl/logger"
-	"github.com/gotomicro/egoctl/logger/colors"
+	"github.com/gotomicro/egoctl/internal/config"
+	"github.com/gotomicro/egoctl/internal/logger"
+	"github.com/gotomicro/egoctl/internal/logger/colors"
 )
 
 const verboseVersionBanner string = `%s%s

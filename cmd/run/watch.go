@@ -24,13 +24,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gotomicro/egoctl/config"
-	"github.com/gotomicro/egoctl/logger/colors"
-	"github.com/gotomicro/egoctl/utils"
+	"github.com/gotomicro/egoctl/internal/config"
+	"github.com/gotomicro/egoctl/internal/logger/colors"
+	"github.com/gotomicro/egoctl/internal/utils"
 
 	"github.com/fsnotify/fsnotify"
 
-	"github.com/gotomicro/egoctl/logger"
+	"github.com/gotomicro/egoctl/internal/logger"
 )
 
 var (

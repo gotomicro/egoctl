@@ -42,7 +42,7 @@ func ExecCmd(cmdName string, args ...string) (string, string, error) {
 	return ExecCmdDir("", cmdName, args...)
 }
 
-// 版本对比 v1比v2大返回1，小于返回-1，等于返回0
+// VerCompare 版本对比 v1比v2大返回1，小于返回-1，等于返回0
 func VerCompare(ver1, ver2 string) int {
 	ver1 = strings.TrimLeft(ver1, "ver") // 清除v,e,r
 	ver2 = strings.TrimLeft(ver2, "ver") // 清除v,e,r

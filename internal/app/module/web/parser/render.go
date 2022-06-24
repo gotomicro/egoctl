@@ -2,20 +2,21 @@ package parser
 
 import (
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
-	"github.com/flosch/pongo2"
-	"github.com/gotomicro/ego/core/elog"
-	"github.com/gotomicro/egoctl/internal/app/module/web/constx"
-	"github.com/gotomicro/egoctl/internal/pkg/system"
-	"github.com/gotomicro/egoctl/internal/pkg/utils"
-	"github.com/gotomicro/egoctl/logger"
-	"github.com/smartwalle/pongo2render"
-	"go.uber.org/zap"
 	"go/format"
 	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
+
+	"github.com/davecgh/go-spew/spew"
+	"github.com/flosch/pongo2"
+	"github.com/gotomicro/ego/core/elog"
+	"github.com/gotomicro/egoctl/internal/app/module/web/constx"
+	"github.com/gotomicro/egoctl/internal/logger"
+	"github.com/gotomicro/egoctl/internal/system"
+	"github.com/gotomicro/egoctl/internal/utils"
+	"github.com/smartwalle/pongo2render"
+	"go.uber.org/zap"
 )
 
 // render
@@ -82,11 +83,11 @@ func NewRender(m RenderInfo) *RenderFile {
 	obj.SetContext("packageName", obj.PackageName)
 	obj.SetContext("packageImports", importMaps)
 
-	//if pathCtx["pathRelEgo"] == "." {
+	// if pathCtx["pathRelEgo"] == "." {
 	//	obj.SetContext("packagePath", obj.PkgPath)
-	//} else {
+	// } else {
 	//	obj.SetContext("packagePath", obj.PkgPath+"/"+pathCtx["pathRelEgo"].(string))
-	//}
+	// }
 
 	obj.SetContext("packageMod", obj.PkgPath)
 

@@ -2,13 +2,14 @@ package parser
 
 import (
 	"fmt"
-	"github.com/gotomicro/ego/core/elog"
-	"github.com/gotomicro/egoctl/internal/app/module/web/constx"
-	"github.com/gotomicro/egoctl/internal/pkg/system"
-	"github.com/gotomicro/egoctl/internal/pkg/utils"
-	"github.com/pelletier/go-toml"
 	"sync"
 	"time"
+
+	"github.com/gotomicro/ego/core/elog"
+	"github.com/gotomicro/egoctl/internal/app/module/web/constx"
+	"github.com/gotomicro/egoctl/internal/system"
+	"github.com/gotomicro/egoctl/internal/utils"
+	"github.com/pelletier/go-toml"
 )
 
 const (

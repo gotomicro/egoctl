@@ -4,7 +4,6 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
-	"github.com/gotomicro/ego/core/elog"
 	"io/ioutil"
 	"os"
 	"path"
@@ -12,8 +11,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gotomicro/egoctl/internal/pkg/utils"
-	"github.com/gotomicro/egoctl/logger"
+	"github.com/gotomicro/ego/core/elog"
+
+	"github.com/gotomicro/egoctl/internal/logger"
+	"github.com/gotomicro/egoctl/internal/utils"
 )
 
 const (

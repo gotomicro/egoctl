@@ -24,3 +24,4 @@ logs
 
 release/
 dist/
+node_modules

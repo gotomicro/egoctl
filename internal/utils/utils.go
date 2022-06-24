@@ -16,20 +16,15 @@ package utils
 
 import (
 	"fmt"
-	"github.com/gotomicro/egoctl/logger"
 	"os"
 	"path"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"time"
-)
 
-// IsExist returns whether a file or directory exists.
-func IsExist(path string) bool {
-	_, err := os.Stat(path)
-	return err == nil || os.IsExist(err)
-}
+	"github.com/gotomicro/egoctl/internal/logger"
+)
 
 // GetGOPATHs returns all paths in GOPATH variable.
 func GetGOPATHs() []string {
@@ -216,4 +211,11 @@ func defaultGOPATH() string {
 		return filepath.Join(home, "go")
 	}
 	return ""
+}
+
+func DumpWrapper(msg string, dump func()) {
+	fmt.Println()
+	logger.Log.Infof("------------------------%s--------------------------", msg)
+	dump()
+	logger.Log.Infof("------------------------%s--------------------------\n\n", msg)
 }

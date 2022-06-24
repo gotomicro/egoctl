@@ -24,9 +24,9 @@ import (
 
 	cmd2 "github.com/gotomicro/egoctl/cmd"
 	"github.com/gotomicro/egoctl/cmd/version"
-	"github.com/gotomicro/egoctl/config"
-	"github.com/gotomicro/egoctl/logger"
-	"github.com/gotomicro/egoctl/utils"
+	"github.com/gotomicro/egoctl/internal/config"
+	"github.com/gotomicro/egoctl/internal/logger"
+	"github.com/gotomicro/egoctl/internal/utils"
 )
 
 var CmdRun = &cobra.Command{

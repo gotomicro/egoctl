@@ -26,10 +26,10 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/gotomicro/egoctl/cmd"
-	"github.com/gotomicro/egoctl/config"
-	"github.com/gotomicro/egoctl/utils"
+	"github.com/gotomicro/egoctl/internal/config"
+	"github.com/gotomicro/egoctl/internal/utils"
 
-	"github.com/gotomicro/egoctl/logger"
+	"github.com/gotomicro/egoctl/internal/logger"
 )
 
 var CmdMigrate = &cobra.Command{

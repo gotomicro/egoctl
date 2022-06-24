@@ -3,6 +3,12 @@ package web
 import (
 	"embed"
 	"errors"
+	"io/fs"
+	"net/http"
+	"path"
+	"path/filepath"
+	"strings"
+
 	"github.com/BurntSushi/toml"
 	"github.com/gin-gonic/gin"
 	"github.com/gotomicro/ego"
@@ -11,14 +17,9 @@ import (
 	"github.com/gotomicro/ego/server/egin"
 	"github.com/gotomicro/egoctl/internal/app/module/web/project"
 	"github.com/gotomicro/egoctl/internal/app/module/web/template"
-	"github.com/gotomicro/egoctl/internal/pkg/system"
+	"github.com/gotomicro/egoctl/internal/system"
 	webui2 "github.com/gotomicro/egoctl/webui"
 	"github.com/syndtr/goleveldb/leveldb"
-	"io/fs"
-	"net/http"
-	"path"
-	"path/filepath"
-	"strings"
 )
 
 type Container struct {

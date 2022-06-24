@@ -24,7 +24,7 @@ import (
 	_ "github.com/gotomicro/egoctl/cmd/run"
 	_ "github.com/gotomicro/egoctl/cmd/version"
 	_ "github.com/gotomicro/egoctl/cmd/web"
-	"github.com/gotomicro/egoctl/config"
+	"github.com/gotomicro/egoctl/internal/config"
 )
 
 func main() {

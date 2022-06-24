@@ -2,15 +2,16 @@ package parser
 
 import (
 	"fmt"
-	"github.com/flosch/pongo2"
-	"github.com/gotomicro/egoctl/internal/pkg/command"
-	"github.com/gotomicro/egoctl/internal/pkg/system"
-	"github.com/gotomicro/egoctl/logger"
-	"github.com/gotomicro/egoctl/utils"
-	"github.com/smartwalle/pongo2render"
 	"path/filepath"
 	"strings"
 	"sync"
+
+	"github.com/flosch/pongo2"
+	"github.com/gotomicro/egoctl/internal/command"
+	"github.com/gotomicro/egoctl/internal/logger"
+	"github.com/gotomicro/egoctl/internal/system"
+	"github.com/gotomicro/egoctl/internal/utils"
+	"github.com/smartwalle/pongo2render"
 )
 
 // store all data

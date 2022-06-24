@@ -4,15 +4,16 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gotomicro/egoctl/internal/app/module/web/constx"
-	"github.com/gotomicro/egoctl/internal/pkg/git"
-	"github.com/gotomicro/egoctl/internal/pkg/system"
-	"github.com/gotomicro/egoctl/internal/pkg/utils"
-	"github.com/syndtr/goleveldb/leveldb"
 	"net/url"
 	"regexp"
 	"strings"
 	"sync"
+
+	"github.com/gotomicro/egoctl/internal/app/module/web/constx"
+	"github.com/gotomicro/egoctl/internal/git"
+	"github.com/gotomicro/egoctl/internal/system"
+	"github.com/gotomicro/egoctl/internal/utils"
+	"github.com/syndtr/goleveldb/leveldb"
 )
 
 // 模板服务

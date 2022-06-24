@@ -3,16 +3,17 @@ package git
 import (
 	"errors"
 	"fmt"
-	"github.com/gotomicro/egoctl/internal/pkg/command"
-	"github.com/gotomicro/egoctl/internal/pkg/utils"
-	"github.com/gotomicro/egoctl/logger"
 	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/gotomicro/egoctl/internal/command"
+	"github.com/gotomicro/egoctl/internal/logger"
+	"github.com/gotomicro/egoctl/internal/utils"
 )
 
-// git tag
+// GetTags git tag
 func GetTags(repoPath string, limit int) ([]string, error) {
 	repo, err := OpenRepository(repoPath)
 	if err != nil {
@@ -32,7 +33,7 @@ func GetTags(repoPath string, limit int) ([]string, error) {
 	return list, nil
 }
 
-// clone repo
+// CloneRepo clone repo
 func CloneRepo(url string, dst string) (err error) {
 	if utils.IsExist(dst) {
 		return errors.New("dst is not empty, dst is " + dst)
@@ -52,7 +53,7 @@ func CloneRepo(url string, dst string) (err error) {
 	return nil
 }
 
-// CloneORPullRepo
+// CloneORPullRepo CloneORPullRepo
 func CloneORPullRepo(url string, dst string) error {
 	if !utils.IsDir(dst) {
 		return CloneRepo(url, dst)
@@ -68,7 +69,7 @@ func CloneORPullRepo(url string, dst string) error {
 	}
 }
 
-//
+// CloneRepoBranch ...
 func CloneRepoBranch(branch string, url string, dst string) error {
 	_, stderr, err := command.ExecCmd("git", "clone", "-b", branch, url, dst)
 	if err != nil {
@@ -120,7 +121,7 @@ func OpenRepository(repoPath string) (*Repository, error) {
 	return &Repository{Path: repoPath}, nil
 }
 
-// 拉取代码
+// Pull 拉取代码
 func (repo *Repository) Pull() error {
 	logger.Log.Info("git pull " + repo.Path)
 	_, stderr, err := command.ExecCmdDir(repo.Path, "git", "pull")
@@ -130,7 +131,7 @@ func (repo *Repository) Pull() error {
 	return nil
 }
 
-// 获取tag列表
+// GetTags 获取tag列表
 func (repo *Repository) GetTags() ([]string, error) {
 	stdout, stderr, err := command.ExecCmdDir(repo.Path, "git", "tag", "-l")
 	if err != nil {
@@ -143,7 +144,7 @@ func (repo *Repository) GetTags() ([]string, error) {
 	return so.Sort(), nil
 }
 
-// git rev-parse HEAD
+// GetVersion git rev-parse HEAD
 func (repo *Repository) GetVersion() (string, error) {
 	stdout, stderr, err := command.ExecCmdDir(repo.Path, "git", "rev-parse", "HEAD")
 	if err != nil {
@@ -152,7 +153,7 @@ func (repo *Repository) GetVersion() (string, error) {
 	return stdout, nil
 }
 
-// 获取两个版本之间的修改日志
+// GetChangeLogs 获取两个版本之间的修改日志
 func (repo *Repository) GetChangeLogs(startVer, endVer string) ([]string, error) {
 	// git log --pretty=format:"%cd %cn: %s" --date=iso v1.8.0...v1.9.0
 	stdout, stderr, err := command.ExecCmdDir(repo.Path, "git", "log", "--pretty=format:%cd %cn: %s", "--date=iso", startVer+"..."+endVer)
@@ -164,7 +165,7 @@ func (repo *Repository) GetChangeLogs(startVer, endVer string) ([]string, error)
 	return logs, nil
 }
 
-// 获取两个版本之间的差异文件列表
+// GetChangeFiles 获取两个版本之间的差异文件列表
 func (repo *Repository) GetChangeFiles(startVer, endVer string, onlyFile bool) ([]string, error) {
 	// git diff --name-status -b v1.8.0 v1.9.0
 	param := "--name-status"
@@ -179,7 +180,7 @@ func (repo *Repository) GetChangeFiles(startVer, endVer string, onlyFile bool) (
 	return lines[:len(lines)-1], nil
 }
 
-// 获取两个版本间的新增或修改的文件数量
+// GetDiffFileCount 获取两个版本间的新增或修改的文件数量
 func (repo *Repository) GetDiffFileCount(startVer, endVer string) (int, error) {
 	cmd := "git diff --name-status -b " + startVer + " " + endVer + " |grep -v ^D |wc -l"
 	stdout, stderr, err := command.ExecCmdDir(repo.Path, "/bin/bash", "-c", cmd)
@@ -190,7 +191,7 @@ func (repo *Repository) GetDiffFileCount(startVer, endVer string) (int, error) {
 	return count, nil
 }
 
-// 导出版本到tar包
+// Export 导出版本到tar包
 func (repo *Repository) Export(startVer, endVer string, filename string) error {
 	// git archive --format=tar.gz $endVer $(git diff --name-status -b $beginVer $endVer |grep -v ^D |grep -v Upgrade/ |awk '{print $2}') -o $tmpFile
 
