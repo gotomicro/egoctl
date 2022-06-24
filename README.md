@@ -1,6 +1,6 @@
 # egoctl
 ## 1 Requirements
-- Go version >= 1.16.
+- Go version >= 1.18
 
 ## 2 Installation
 ```
@@ -14,8 +14,6 @@ bash <(curl -L https://raw.githubusercontent.com/gotomicro/egoctl/main/getlatest
 * /usr/local/bin/protoc-gen-go-errors
 * /usr/local/bin/protoc-gen-go-http
 * /usr/local/bin/egoctl
-
-
 
 ## 3 快速生成代码
 * 启动web: egoctl web start
