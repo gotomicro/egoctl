@@ -6,12 +6,12 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/flosch/pongo2"
+	"github.com/gotomicro/egoctl/internal/app/module/web/parser/pongo2"
+	"github.com/gotomicro/egoctl/internal/app/module/web/parser/pongo2render"
 	"github.com/gotomicro/egoctl/internal/command"
 	"github.com/gotomicro/egoctl/internal/logger"
 	"github.com/gotomicro/egoctl/internal/system"
 	"github.com/gotomicro/egoctl/internal/utils"
-	"github.com/smartwalle/pongo2render"
 )
 
 // store all data

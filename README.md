@@ -48,7 +48,11 @@ vim config/local.toml 更改db配置
 export EGO_DEBUG=true && go run main.go
 ```
 
-## 4 DSL配置
+## 3 模板
+因为前端会使用关键字`{{`, `}}`，而`pongo2`的模板也会使用该关键字，所以`egoctl`将`pongo2/v6`版本`fork`到项目里，
+将模板关键字`{{`,`}}`改为`{$`,`$}`
+
+## 5 DSL配置
 ```
 package egoctl
 type User struct {
@@ -58,8 +62,8 @@ type User struct {
 ```
 
 
-## 5 模板配置
-### 5.1 根据模型设置模板
+## 6 模板配置
+### 6.1 根据模型设置模板
 DSL配置
 ```
 package egoctl
@@ -68,30 +72,30 @@ type User struct {
     UserName string `gorm:"not null" json:"userName" dto:""` // 昵称
 }
 ```
-### 5.2 获取主键 
+### 6.2 获取主键 
 模版配置
 ```
-{{modelSchemas|fieldsGetPrimaryKey|snakeString}}
+{$modelSchemas|fieldsGetPrimaryKey|snakeString$}
 ```
 
-### 5.3 生成结构体
+### 6.3 生成结构体
 模板配置
 ```
 type {{modelName|upperFirst}} struct {
 	{% for value in modelSchemas %}
-	{{value.FieldName}} {{value.FieldType}} `gorm:"{{value|fieldGetTag:"gorm"}}"` {{value.Comment}}
+	{$ value.FieldName $} {$ value.FieldType $} `gorm:"{$ value|fieldGetTag:"gorm" $}"` {$ value.Comment $}
 	{% endfor %}
 }
 ```
 
-### 5.4 判断某字段是否存在
+### 6.4 判断某字段是否存在
 模板配置
 ```
 {% if modelSchemas|fieldsExist:Uid %}
 {% endif %}
 ```
 
-## 6 根据单个字段设置模板
+## 7 根据单个字段设置模板
 DSL配置
 ```
 type User struct {
@@ -100,14 +104,14 @@ type User struct {
 }
 ```
 
-### 6.1 获取某个字段的驼峰（常用于JSON，前后端对接）
+### 7.1 获取某个字段的驼峰（常用于JSON，前后端对接）
 ```
-{{value.FieldName|camelString|lowerFirst}}
+{$ value.FieldName|camelString|lowerFirst $}
 UserName  变成   userName
 ```
 
-### 6.2 获取某个字段的蛇形（常用于数据库）
+### 7.2 获取某个字段的蛇形（常用于数据库）
 ```
-{{value.FieldName|snakeString|lowerFirst}}
+{$ value.FieldName|snakeString|lowerFirst $}
 UserName  变成   user_name
 ```

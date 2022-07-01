@@ -9,13 +9,13 @@ import (
 	"path/filepath"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/flosch/pongo2"
 	"github.com/gotomicro/ego/core/elog"
 	"github.com/gotomicro/egoctl/internal/app/module/web/constx"
+	"github.com/gotomicro/egoctl/internal/app/module/web/parser/pongo2"
+	"github.com/gotomicro/egoctl/internal/app/module/web/parser/pongo2render"
 	"github.com/gotomicro/egoctl/internal/logger"
 	"github.com/gotomicro/egoctl/internal/system"
 	"github.com/gotomicro/egoctl/internal/utils"
-	"github.com/smartwalle/pongo2render"
 	"go.uber.org/zap"
 )
 

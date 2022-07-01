@@ -4,7 +4,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/flosch/pongo2"
+	"github.com/gotomicro/egoctl/internal/app/module/web/parser/pongo2"
 	"github.com/gotomicro/egoctl/internal/utils"
 )
 
