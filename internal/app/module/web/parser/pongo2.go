@@ -15,13 +15,14 @@ func init() {
 	_ = pongo2.RegisterFilter("camelString", pongo2CamelString)
 	_ = pongo2.RegisterFilter("fieldsGetPrimaryKey", pongo2ModelFieldsGetPrimaryKey) // 根据字段数组获取主键
 	_ = pongo2.RegisterFilter("fieldsExist", pongo2ModelFieldsExist)
+	_ = pongo2.RegisterFilter("fieldsTagExist", pongo2ModelFieldsTagExist) // models|fieldsTagExist:"ant,select"
 	_ = pongo2.RegisterFilter("fieldGetTag", pongo2ModelFieldGetTag)
 }
 
 func pongo2ModelFieldsExist(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
 	arr, flag := in.Interface().(ModelSchemas)
 	if !flag {
-		return pongo2.AsSafeValue(""), nil
+		return pongo2.AsSafeValue(false), nil
 	}
 
 	for _, info := range arr {
@@ -29,6 +30,28 @@ func pongo2ModelFieldsExist(in *pongo2.Value, param *pongo2.Value) (*pongo2.Valu
 			return pongo2.AsSafeValue(true), nil
 		}
 
+	}
+	return pongo2.AsSafeValue(false), nil
+}
+
+func pongo2ModelFieldsTagExist(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+	arr, flag := in.Interface().(ModelSchemas)
+	if !flag {
+		return pongo2.AsSafeValue(false), nil
+	}
+
+	str := param.String()
+	// 0 tag key ant , 1 value select
+	arr2 := strings.Split(str, ",")
+
+	for _, info := range arr {
+		tagValue, flag := info.FieldTags[arr2[0]]
+		if !flag {
+			continue
+		}
+		if tagValue.Origin == arr2[1] {
+			return pongo2.AsSafeValue(true), nil
+		}
 	}
 	return pongo2.AsSafeValue(false), nil
 }

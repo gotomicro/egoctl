@@ -95,6 +95,12 @@ type {{modelName|upperFirst}} struct {
 {% endif %}
 ```
 
+### 6.5 判断某个字段中某个tag值是否存在
+```
+{% if modelSchemas|fieldsTagExist:json,userName %}
+{% endif %}
+```
+
 ## 7 根据单个字段设置模板
 DSL配置
 ```
