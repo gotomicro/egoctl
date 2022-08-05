@@ -45,7 +45,6 @@ func (this *Render) Template(name string) *Template {
 
 	if template == nil {
 		panic("template " + name + " not exists")
-		return nil
 	}
 
 	var r = &Template{}

@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"sync"
+	"time"
+
 	"github.com/gotomicro/egoctl/internal/app/module/web/constx"
 	"github.com/gotomicro/egoctl/internal/app/module/web/parser"
 	"github.com/gotomicro/egoctl/internal/app/module/web/template"
 	"github.com/syndtr/goleveldb/leveldb"
-	"sync"
-	"time"
 )
 
 type Info struct {
@@ -308,7 +309,7 @@ func (p *projectSrv) ProjectGen(req InfoUniqId) (err error) {
 		return fmt.Errorf("获取projects失败: %w", err)
 	}
 
-	templateInfo, err := template.Srv.TemplateInfo(template.InfoUniqId{template.GitURL(info.GitRemotePath)})
+	templateInfo, err := template.Srv.TemplateInfo(template.InfoUniqId{GitRemotePath: template.GitURL(info.GitRemotePath)})
 	if err != nil {
 		return fmt.Errorf("获取模板信息失败: %w", err)
 	}
@@ -340,7 +341,7 @@ func (p *projectSrv) ProjectRender(req InfoUniqId) (resp parser.StoreData, err e
 		return resp, fmt.Errorf("获取projects失败: %w", err)
 	}
 
-	templateInfo, err := template.Srv.TemplateInfo(template.InfoUniqId{template.GitURL(info.GitRemotePath)})
+	templateInfo, err := template.Srv.TemplateInfo(template.InfoUniqId{GitRemotePath: template.GitURL(info.GitRemotePath)})
 	if err != nil {
 		return resp, fmt.Errorf("获取模板信息失败: %w", err)
 	}

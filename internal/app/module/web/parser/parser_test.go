@@ -1,12 +1,13 @@
 package parser
 
 import (
-	"github.com/davecgh/go-spew/spew"
 	"testing"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 func Test_astParser_parserStruct(t *testing.T) {
-	ast := AstParserBuild(UserOption{
+	ast, _ := AstParserBuild(UserOption{
 		ScaffoldDSLContent: "testdata/user/ego.go",
 	}, TmplOption{})
 	if len(ast.modelArr) != 1 {
@@ -16,7 +17,7 @@ func Test_astParser_parserStruct(t *testing.T) {
 }
 
 func Test_astParser_parserStructTag(t *testing.T) {
-	ast := AstParserBuild(UserOption{
+	ast, _ := AstParserBuild(UserOption{
 		ScaffoldDSLContent: "testdata/user/ego.go",
 	}, TmplOption{})
 	if len(ast.modelArr) != 1 {
