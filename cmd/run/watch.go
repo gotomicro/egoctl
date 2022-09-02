@@ -24,8 +24,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gotomicro/egoctl/internal/colors"
 	"github.com/gotomicro/egoctl/internal/config"
-	"github.com/gotomicro/egoctl/internal/logger/colors"
 	"github.com/gotomicro/egoctl/internal/utils"
 
 	"github.com/fsnotify/fsnotify"

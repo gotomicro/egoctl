@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/gotomicro/egoctl/internal/colors"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 
 	"github.com/gotomicro/egoctl/cmd"
 	"github.com/gotomicro/egoctl/internal/config"
 	"github.com/gotomicro/egoctl/internal/logger"
-	"github.com/gotomicro/egoctl/internal/logger/colors"
 )
 
 const verboseVersionBanner string = `%s%s
